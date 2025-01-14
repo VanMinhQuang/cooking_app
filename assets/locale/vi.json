@@ -1,0 +1,35 @@
+{
+	"app_bar": 
+	{
+		"title": "Chào mừng tới Home page"
+	},
+	"button": 
+	{
+		"cancel": "Huỷ",
+		"change_language": "Chọn ngôn ngữ"
+	},
+	"language": 
+	{
+		"name": 
+		{
+			"en": "Anh",
+			"vi": "Việt"
+		},
+		"selected_message": "Ngôn ngữ đang chọn là {language}",
+		"selection": 
+		{
+			"message": "Hãy chọn ngôn ngữ trong lưới",
+			"title": "Chọn ngôn ngữ"
+		}
+	},
+	"plural": 
+	{
+		"demo": 
+		{
+			"zero": "Bấm nút",
+			"one": "Bấm 1 lần",
+			"two": "Bấm 2 lần",
+			"other": "Bấm {{value}} lần."
+		}
+	}
+}

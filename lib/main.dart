@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'core/bundle/default_asset.dart';
+
 Future<void> _initialize() async{
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -18,13 +20,17 @@ Future<void> main() async{
       fallbackLocale: 'vi',
       supportedLocales: ['en_US', 'vi']);
   runApp(
-    OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-
-        return  LocalizedApp(delegate,App());
-
-
-      },
+    DefaultAssetBundle(
+      bundle: TestAssetBundle(),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return OrientationBuilder(
+            builder: (BuildContext context, Orientation orientation) {
+              return  LocalizedApp(delegate,App());
+            },
+          );
+        },
+      ),
     )
   );
 }

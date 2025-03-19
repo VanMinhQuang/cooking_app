@@ -1,4 +1,4 @@
-import 'package:cooking_project/views/screens/home/home_bloc.dart';
+import 'package:cooking_project/views/screens/home/home_cubit.dart';
 import 'package:cooking_project/views/screens/home/home_screen.dart';
 import 'package:cooking_project/views/screens/home/home_state.dart';
 import 'package:cooking_project/views/screens/main_menu_searching/main_menu_searching_screen.dart';

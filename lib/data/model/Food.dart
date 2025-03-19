@@ -19,7 +19,7 @@ class Food {
     Food(
         foodId: "2",
         foodName: "French Fries",
-        category: ["Deep-Fried", "Snack"],
+        category: ["Deep-Fried", "Snack","Breakfast","Fast Food","Oiled","French","BLA BLA BLA BLA"],
         image: "https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg",
         descr: "Crispy golden fries served hot and fresh."
     ),

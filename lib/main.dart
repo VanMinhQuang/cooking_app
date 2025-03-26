@@ -7,11 +7,14 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/bundle/default_asset.dart';
+import 'core/singleton/local_language.dart';
+
 
 Future<void> _initialize() async{
   WidgetsFlutterBinding.ensureInitialized();
 
 }
+
 
 Future<void> main() async{
   HttpOverrides.global = MyHttpOverrides();
@@ -19,6 +22,7 @@ Future<void> main() async{
   var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'vi',
       supportedLocales: ['en_US', 'vi']);
+
   runApp(
     DefaultAssetBundle(
       bundle: TestAssetBundle(),
@@ -57,7 +61,8 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    var localizationDelegate = LocalizedApp.of(context).delegate;
+
+    LocalizationService().init(context);
     return LocalizationProvider(
         state: LocalizationProvider.of(context).state,
         child: MaterialApp(
@@ -67,10 +72,10 @@ class _AppState extends State<App> {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               DefaultCupertinoLocalizations.delegate,
-              localizationDelegate
+              LocalizationService().delegate
             ],
-          supportedLocales: localizationDelegate.supportedLocales,
-          locale: localizationDelegate.currentLocale,
+          supportedLocales: LocalizationService().delegate.supportedLocales,
+          locale: LocalizationService().delegate.currentLocale,
             debugShowCheckedModeBanner: false,));
   }
 }

@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cooking_project/data/model/meal_model.dart';
 import 'package:flutter/material.dart';
+import '../../../../data/constant/constant_app.dart';
 import '../../../../data/model/Food.dart';
 
 class DetailMealForm extends StatefulWidget {
-  final Food? food;
+  final Meal? food;
 
   DetailMealForm(this.food);
 
@@ -48,27 +51,14 @@ class _DetailMealFormState extends State<DetailMealForm> {
 
               child: FlexibleSpaceBar(
                 background: Hero(
-                  tag: widget.food?.foodId ?? UniqueKey().toString(),
-                  child: Image.network(
-                    widget.food?.image?.isNotEmpty == true
-                        ? widget.food!.image!
-                        : 'https://via.placeholder.com/400', // Fallback image
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                          child: CircularProgressIndicator(
-                          value: loadingProgress
-                              .expectedTotalBytes !=
-                          null
-                          ? loadingProgress
-                              .cumulativeBytesLoaded /
-                          loadingProgress
-                              .expectedTotalBytes!
-                              : null,
-                      ));
-                    },
-                  ),
+                  tag: widget.food?.mealID ?? UniqueKey().toString(),
+                  child: CachedNetworkImage(
+                      imageUrl: widget.food?.image ?? '',
+                    alignment: Alignment.center,
+                    fit: BoxFit.scaleDown,
+                    placeholder: (context, url) => defaultImageEmpty,
+                    errorWidget: (context, url, error) => defaultImageEmpty,
+                  )
                 ),
                 stretchModes: [
                   StretchMode.blurBackground,
@@ -99,7 +89,7 @@ class _DetailMealFormState extends State<DetailMealForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                child: Text(widget.food!.foodName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
+                child: Text(widget.food!.mealName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
               ),
               Row(
                 children: [
@@ -112,7 +102,7 @@ class _DetailMealFormState extends State<DetailMealForm> {
                 scrollDirection: Axis.horizontal,
                 physics: BouncingScrollPhysics(),
                 child: Row(
-                  children: widget.food!.category!.map((category) {
+                  children: widget.food!.method!.map((category) {
                     return Container(
                       margin: EdgeInsets.only(right: 8),
                       child: Chip(
@@ -124,10 +114,10 @@ class _DetailMealFormState extends State<DetailMealForm> {
                 ),
               ),
 
-               Text(
-                widget.food!.descr!,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
+              //  Text(
+              //   widget.food!.descr!,
+              //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              // ),
             ],
           ),
         ),

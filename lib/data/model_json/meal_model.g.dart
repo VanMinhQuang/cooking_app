@@ -13,6 +13,7 @@ Meal _$MealFromJson(Map<String, dynamic> json) => Meal(
       image: json['image'] as String?,
       totalTime: (json['totalTime'] as num?)?.toInt(),
       totalLike: (json['totalLike'] as num?)?.toInt(),
+      isVegan: json['isVegan'] ?? false
     );
 
 Map<String, dynamic> _$MealToJson(Meal instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$MealToJson(Meal instance) => <String, dynamic>{
       'image': instance.image,
       'totalTime': instance.totalTime,
       'totalLike': instance.totalLike,
+      'isVegan': instance.isVegan
     };

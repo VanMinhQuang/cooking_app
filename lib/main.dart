@@ -8,11 +8,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/bundle/default_asset.dart';
 import 'core/singleton/local_language.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 Future<void> _initialize() async{
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform);
 }
 
 

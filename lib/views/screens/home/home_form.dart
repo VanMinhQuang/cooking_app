@@ -2,6 +2,7 @@ import 'package:cooking_project/views/screens/home/home_cubit.dart';
 import 'package:cooking_project/views/screens/home/home_screen.dart';
 import 'package:cooking_project/views/screens/home/home_state.dart';
 import 'package:cooking_project/views/screens/main_menu_searching/main_menu_searching_screen.dart';
+import 'package:cooking_project/views/screens/setting/setting_screen.dart';
 import 'package:cooking_project/views/widgets/bar/navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _HomeFormState extends State<HomeForm> {
     // TODO: implement initState
     super.initState();
     _listWidget
-        .addAll([widget1(), MainMenuSearchingScreen(), Text('widget 3')]);
+        .addAll([widget1(), MainMenuSearchingScreen(), SettingScreen()]);
   }
 
   @override
@@ -44,28 +45,27 @@ class _HomeFormState extends State<HomeForm> {
             context.read<HomeCubit>().changePageIndex(index);
           },
         ),
-        appBar: AppBar(
-            backgroundColor: Colors.green,
-            title: SizedBox(child: Text(translate('app_bar.title')))),
-        body: BlocListener<HomeCubit, HomeState>(
-          listener: (context, state) {
-            if (state is ChangeIndexBottomBarState) {
-              if (selectedIndex != state.index) {
+        body: SafeArea(
+          child: BlocListener<HomeCubit, HomeState>(
+            listener: (context, state) {
+              if (state is ChangeIndexBottomBarState) {
+                if (selectedIndex != state.index) {
 
-                  selectedIndex = state.index;
+                    selectedIndex = state.index;
 
 
+                }
               }
-            }
-          },
-
-          child: BlocBuilder<HomeCubit, HomeState>(
-            builder: (BuildContext context, state) {
-              return IndexedStack(
-                index: selectedIndex,
-                children: _listWidget,
-              );
             },
+
+            child: BlocBuilder<HomeCubit, HomeState>(
+              builder: (BuildContext context, state) {
+                return IndexedStack(
+                  index: selectedIndex,
+                  children: _listWidget,
+                );
+              },
+            ),
           ),
         ));
   }

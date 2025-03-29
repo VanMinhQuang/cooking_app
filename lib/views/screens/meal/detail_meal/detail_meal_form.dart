@@ -7,7 +7,7 @@ import '../../../../data/model/Food.dart';
 class DetailMealForm extends StatefulWidget {
   final Meal? food;
 
-  DetailMealForm(this.food);
+  const DetailMealForm(this.food, {super.key});
 
   @override
   State<DetailMealForm> createState() => _DetailMealFormState();

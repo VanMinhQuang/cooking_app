@@ -10,8 +10,9 @@ class Meal{
   String? image;
   int? totalTime;
   int? totalLike;
+  bool? isVegan;
 
-  Meal({this.mealID, this.mealName, this.method, this.image, this.totalTime, this.totalLike});
+  Meal({this.mealID, this.mealName, this.method, this.image, this.isVegan , this.totalTime, this.totalLike});
 
   factory Meal.fromJson(Map<String, dynamic> json) => _$MealFromJson(json);
 

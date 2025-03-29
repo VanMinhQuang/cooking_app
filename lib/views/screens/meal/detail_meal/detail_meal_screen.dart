@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class DetailMealScreen extends StatelessWidget {
   Meal? food;
-   DetailMealScreen({this.food});
+   DetailMealScreen({super.key, this.food});
 
 
   @override

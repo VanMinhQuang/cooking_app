@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cooking_project/data/constant/constant_app.dart';
-import 'package:cooking_project/views/screens/logn/login_screen.dart';
+import 'package:cooking_project/views/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

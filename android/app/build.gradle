@@ -31,7 +31,6 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 34
 
-
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -43,13 +42,23 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "vn.test.cooking"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 34
         //TODO: 2024-04-15:[Upgrade build] khi upgrade build android can tang version len de chay duoc upgrade auto
         versionCode 1
         versionName '0.0.0'
         multiDexEnabled true
     }
+
+    signingConfigs {
+        release {
+            keyAlias 'meal'
+            keyPassword 'Baythatxa@123'
+            storePassword 'Baythatxa@123'
+            storeFile file('C:/Project/Personal/cooking_app/release/meal.keystore')
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

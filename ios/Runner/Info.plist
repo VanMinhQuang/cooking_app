@@ -2,6 +2,34 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<key>CLIENT_ID</key>
+	<string>485175607200-655gen46n2gegmktj23hj4brooo7q1nu.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.485175607200-655gen46n2gegmktj23hj4brooo7q1nu</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDPKJ8FwPcLLJxijy3OxTrhLYKjKdX3B0k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>485175607200</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.cookingProject</string>
+	<key>PROJECT_ID</key>
+	<string>cookingapp-85090</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cookingapp-85090.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:485175607200:ios:2ef71b2922e0d46e936ec5</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

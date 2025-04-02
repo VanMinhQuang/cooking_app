@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "485175607200",
+    "project_id": "cookingapp-85090",
+    "storage_bucket": "cookingapp-85090.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485175607200:android:dff6b1cfe2a54fb0936ec5",
+        "android_client_info": {
+          "package_name": "vn.test.cooking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485175607200-92vaibjv2t7jjs1ofoum1b2nojb2qnbr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.test.cooking",
+            "certificate_hash": "6145c1ebb8568b7e2d571553d6fa054550a8f569"
+          }
+        },
+        {
+          "client_id": "485175607200-5bt4272fo3pi5ob85a5advfg1211gt4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCExaiPPPilX5DpYBJMPO1Cwl45PE-V2Dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485175607200-5bt4272fo3pi5ob85a5advfg1211gt4p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "485175607200-655gen46n2gegmktj23hj4brooo7q1nu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cookingProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

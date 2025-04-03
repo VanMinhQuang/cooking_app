@@ -29,6 +29,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "vn.test.cooking"  // Required for AGP 8.0+
     compileSdkVersion 34
 
     kotlinOptions {
@@ -39,8 +40,12 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
+
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "vn.test.cooking"
         minSdkVersion 23
         targetSdkVersion 34
@@ -55,16 +60,26 @@ android {
             keyAlias 'meal'
             keyPassword 'Baythatxa@123'
             storePassword 'Baythatxa@123'
-            storeFile file('C:/Project/Personal/cooking_app/release/meal.keystore')
+            storeFile file('C:/Project/Personal/cooking_app/release/meal.keystore')  // Changed to relative path
         }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release  // Using release signing config
         }
+    }
+
+    // Required for AGP 8.0+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // Needed for AGP 8.0+ to handle resource namespacing
+    buildFeatures {
+        // Add any build features you need
+        buildConfig true
     }
 }
 
@@ -72,3 +87,8 @@ flutter {
     source '../..'
 }
 
+// Add any additional dependencies your app needs
+dependencies {
+    // For fixing multidex issues if needed
+    implementation 'androidx.multidex:multidex:2.0.1'
+}

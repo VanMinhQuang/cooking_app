@@ -3,8 +3,9 @@ import 'package:cooking_project/core/helper/format_number.dart';
 import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/core/styles/icons.dart';
 import 'package:cooking_project/core/styles/text_theme.dart';
-import 'package:cooking_project/data/model/Food.dart';
 import 'package:cooking_project/data/model/meal_model.dart';
+import 'package:cooking_project/views/screens/login/login/login_state.dart';
+import 'package:cooking_project/views/screens/login/otp/otp_screen.dart';
 import 'package:cooking_project/views/screens/main_menu_searching/main_menu_searching_state.dart';
 import 'package:cooking_project/views/screens/meal/detail_meal/detail_meal_screen.dart';
 import 'package:cooking_project/views/widgets/box_field/box_field_widget.dart';
@@ -24,8 +25,7 @@ class MainMenuSearchingForm extends StatefulWidget {
 }
 
 class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
-  List<Food>? foodList;
-  List<Food>? tempList;
+
   List<Meal>? mealList;
   bool? isLoading = true;
   final _searchController = TextEditingController();
@@ -34,9 +34,6 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    foodList = Food.foodList;
-    tempList = <Food>[];
-    tempList!.addAll(foodList!);
     context.read<MainMenuCubit>().loadListFood();
   }
 
@@ -87,16 +84,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
         onClear: (text) {},
         onFieldChange: (value) {},
         onSubmit: (text) {
-          setState(() {
-            if (text.isNotEmpty) {
-              tempList = foodList!
-                  .where((e) =>
-                      e.foodName!.contains(text) || e.foodId!.contains(text))
-                  .toList();
-            } else {
-              tempList = foodList;
-            }
-          });
+
         },
         hintText: 'Search using food name or category',
         icon: Icons.search,

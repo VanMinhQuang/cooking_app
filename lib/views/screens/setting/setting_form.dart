@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cooking_project/data/constant/constant_app.dart';
-import 'package:cooking_project/views/screens/login/login_screen.dart';
+import 'package:cooking_project/routes.dart';
+import 'package:cooking_project/views/screens/login/login/login_screen.dart';
+import 'package:cooking_project/views/screens/setting/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,7 +41,7 @@ class _SettingFormState extends State<SettingForm> {
       //padding: EdgeInsets,
       child: Card(
         child: InkWell(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen(),)),
+          onTap: () => Navigator.pushNamed(context, AppRoutes.login),
           child: ListTile(
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),

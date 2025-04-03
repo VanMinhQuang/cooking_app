@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:cooking_project/routes.dart';
 import 'package:cooking_project/views/screens/home/home_screen.dart';
+import 'package:cooking_project/views/screens/login/login/login_screen.dart';
+import 'package:cooking_project/views/screens/login/otp/otp_screen.dart';
+import 'package:cooking_project/views/screens/setting/setting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -68,6 +72,8 @@ class _AppState extends State<App> {
     return LocalizationProvider(
         state: LocalizationProvider.of(context).state,
         child: MaterialApp(
+          initialRoute: AppRoutes.home,
+          onGenerateRoute: AppRoutes.generateRoute,
             home: HomeScreen(),
             localizationsDelegates: [
               GlobalMaterialLocalizations.delegate,

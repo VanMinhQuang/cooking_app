@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meal4U</string>
+    <string name="facebook_app_id">664092249538189</string>
+    <string name="fb_login_protocol_scheme">fb664092249538189</string>
+    <string name="facebook_client_token">c7fe295f6ee3b5ac6fb61f32b0efd271</string>
+</resources>

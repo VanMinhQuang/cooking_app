@@ -1,4 +1,4 @@
-import 'package:cooking_project/data/model/Food.dart';
+
 import 'package:cooking_project/data/model/meal_model.dart';
 import 'package:equatable/equatable.dart';
 

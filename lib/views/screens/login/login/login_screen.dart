@@ -1,10 +1,11 @@
 import 'package:cooking_project/data/repository/login_repository.dart';
-import 'package:cooking_project/views/screens/login/login_cubit.dart';
-import 'package:cooking_project/views/screens/login/login_form.dart';
+import 'package:cooking_project/views/screens/login/login/login_cubit.dart';
+import 'package:cooking_project/views/screens/login/login/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
+  static String routeName = 'LoginScreen';
   const LoginScreen({super.key});
 
   @override

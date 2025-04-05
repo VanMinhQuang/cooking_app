@@ -3,12 +3,13 @@ import 'package:cooking_project/views/screens/meal/detail_meal/detail_meal_form.
 import 'package:flutter/cupertino.dart';
 
 class DetailMealScreen extends StatelessWidget {
+  String? heroTag;
   Meal? food;
-   DetailMealScreen({super.key, this.food});
+   DetailMealScreen({super.key, this.food, this.heroTag});
 
 
   @override
   Widget build(BuildContext context) {
-    return DetailMealForm(food);
+    return DetailMealForm(food,heroTag);
   }
 }

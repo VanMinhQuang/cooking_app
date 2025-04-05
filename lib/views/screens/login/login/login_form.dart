@@ -28,7 +28,7 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
         body: BlocListener<LoginCubit, LoginState>(
           listener: (context, state) {
             if(state is LoginSuccess){
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             }else
             if(state is LoginLoading){
               showProgressDialog(message: '');
@@ -89,145 +89,146 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
   }
 
   Widget _body() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Logo
-              SizedBox(width: 80, height: 80, child: logoImage),
+    return BlocBuilder<LoginCubit,LoginState>(builder: ( context,  state) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Logo
+                SizedBox(width: 80, height: 80, child: logoImage),
 
-              SizedBox(height: 10),
-              // Login Form
-              _loginBody()
-            ],
+                SizedBox(height: 10),
+                // Login Form
+                _loginBody()
+              ],
+            ),
           ),
         ),
-      ),
+      );
+    },
+
     );
   }
 
   Widget _loginBody() {
-    return BlocListener<LoginCubit, LoginState>(
-      listener: (context, state) {},
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        elevation: 5,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Hello Chief",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 5,
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Hello Chief",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text("Sign into your account"),
+            SizedBox(height: 20),
+            // Email TextField
+            TextField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: "Phone",
+                prefixIcon: Icon(Icons.phone),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: _isPhoneEmpty ? Colors.red : Colors.grey,
+                  ),
+                  //  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              Text("Sign into your account"),
-              SizedBox(height: 20),
-              // Email TextField
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  labelText: "Phone",
-                  prefixIcon: Icon(Icons.phone),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: _isPhoneEmpty ? Colors.red : Colors.grey,
-                    ),
-                    //  borderRadius: BorderRadius.circular(10),
+            ),
+            SizedBox(height: 20),
+            // Login Button
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  var phoneNumber = _phoneController.text;
+                  if (phoneNumber.isNotEmpty) {
+                    phoneNumber = _modifyPhoneNumber(phoneNumber);
+                    _verifyPhoneNumber(phoneNumber);
+                  } else {
+                    setState(() {
+                      _isPhoneEmpty = true;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text('Please enter a valid phone number')),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorPrimary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                child: Text("Login",
+                    style: TextThemeStyle.textSecondaryFontSizeBold(14,
+                        color: colorWhite)),
               ),
-              SizedBox(height: 20),
-              // Login Button
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    var phoneNumber = _phoneController.text;
-                    if (phoneNumber.isNotEmpty) {
-                      phoneNumber = _modifyPhoneNumber(phoneNumber);
-                      _verifyPhoneNumber(phoneNumber);
-                    } else {
-                      setState(() {
-                        _isPhoneEmpty = true;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text('Please enter a valid phone number')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+            ),
+            SizedBox(height: 10),
+            Center(child: Text("Or login using social media")),
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                // Ensures the icons are centered
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    // Adds spacing between icons
+                    child: InkWell(
+                      onTap: () => context.read<LoginCubit>().loginFacebook(),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        // Optional padding
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors
+                              .grey[200], // Background color for the icon
+                        ),
+                        child: Icon(Icons.facebook,
+                            size: 32, color: Colors.blue),
+                      ),
                     ),
                   ),
-                  child: Text("Login",
-                      style: TextThemeStyle.textSecondaryFontSizeBold(14,
-                          color: colorWhite)),
-                ),
-              ),
-              SizedBox(height: 10),
-              Center(child: Text("Or login using social media")),
-              Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  // Ensures the icons are centered
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      // Adds spacing between icons
-                      child: InkWell(
-                        onTap: () => context.read<LoginCubit>().loginFacebook(),
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          // Optional padding
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors
-                                .grey[200], // Background color for the icon
-                          ),
-                          child: Icon(Icons.facebook,
-                              size: 32, color: Colors.blue),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    // Adds spacing between icons
+                    child: InkWell(
+                      onTap: () => context.read<LoginCubit>().loginGoogle(),
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        padding: const EdgeInsets.all(8.0),
+                        // Optional padding
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors
+                              .grey[200], // Background color for the icon
                         ),
+                        child: googleIcon,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      // Adds spacing between icons
-                      child: InkWell(
-                        onTap: () => context.read<LoginCubit>().loginGoogle(),
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          padding: const EdgeInsets.all(8.0),
-                          // Optional padding
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors
-                                .grey[200], // Background color for the icon
-                          ),
-                          child: googleIcon,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(height: 10),
-            ],
-          ),
+            ),
+            SizedBox(height: 10),
+          ],
         ),
       ),
     );

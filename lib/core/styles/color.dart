@@ -13,7 +13,7 @@ Color colorPrimary700 = Colors.green[700]!;
 
 Color colorPrimary800 = Colors.green[800]!;
 
-const colorBlack = Colors.black54;
+const colorBlack = Colors.black;
 
 const  colorWhite = Colors.white;
 

@@ -17,15 +17,10 @@ class HomeForm extends StatefulWidget {
 }
 
 class _HomeFormState extends State<HomeForm> {
-  int _counter = 0;
 
   int selectedIndex = 0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void _decrementCounter() => setState(() => _counter--);
-
-  void _incrementCounter() => setState(() => _counter++);
   final List<Widget> _listWidget = [];
 
   @override
@@ -88,27 +83,6 @@ class _HomeFormState extends State<HomeForm> {
                 onPressed: () => _onActionSheetPress(context),
                 child: Text(translate('button.change_language')),
               )),
-          Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Text(translatePlural('plural.demo', _counter))),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.remove_circle),
-                iconSize: 48,
-                onPressed: _counter > 0
-                    ? () => setState(() => _decrementCounter())
-                    : null,
-              ),
-              IconButton(
-                icon: Icon(Icons.add_circle),
-                color: Colors.blue,
-                iconSize: 48,
-                onPressed: () => setState(() => _incrementCounter()),
-              ),
-            ],
-          )
         ],
       ),
     );

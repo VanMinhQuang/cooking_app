@@ -13,7 +13,7 @@ class MainMenuSearchingEmpty  extends MainMenuSearchingState {}
 class MainMenuSearchingLoading extends MainMenuSearchingState {}
 
 class MainMenuSearchingLoaded extends MainMenuSearchingState{
-  final List<Meal> foods;
+  final MainMenuMeal foods;
   const MainMenuSearchingLoaded({required this.foods});
   @override
   List<Object> get props => [foods];

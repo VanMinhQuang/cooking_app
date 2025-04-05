@@ -25,8 +25,7 @@ class MainMenuSearchingForm extends StatefulWidget {
 }
 
 class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
-
-  List<Meal>? mealList;
+  MainMenuMeal? mealList;
   bool? isLoading = true;
   final _searchController = TextEditingController();
 
@@ -34,7 +33,9 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<MainMenuCubit>().loadListFood();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MainMenuCubit>().loadListFood();
+    });
   }
 
   Future<void> _refresIndicator() async {
@@ -56,22 +57,173 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
             border: Border.all(
                 width: 2, color: Colors.white24, style: BorderStyle.solid),
           ),
-          child: BlocListener<MainMenuCubit, MainMenuSearchingState>(
+          child: BlocConsumer<MainMenuCubit, MainMenuSearchingState>(
             listener: (context, state) {
               if (state is MainMenuSearchingLoading) {
                 isLoading = true;
+              } else if (state is MainMenuSearchingEmpty) {
+                isLoading = false;
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('Error')));
               } else if (state is MainMenuSearchingLoaded) {
                 isLoading = false;
                 mealList = state.foods;
-              } else if (state is MainMenuSearchingError) {
-                isLoading = false;
               }
             },
-            child: Column(
-              children: [_buildSeacrh(), _buildListMeal()],
-            ),
+            builder: (context, state) {
+              return SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                       _buildTitle('Mon an yeu thich nhat',haveIcon: true,icon: Icons.favorite,iconColor: Colors.red),
+                      _buildGridMeal(mealList?.tookMostTimeMeals ?? [], 'FAVORITE'),
+                       _buildTitle('Mon an danh cho nguoi thuc vat',haveIcon: true,icon: Icons.eco,iconColor: colorPrimary),
+                      _buildGridMeal(mealList?.veganMeals ?? [], 'VEGAN'),
+                       _buildTitle('Danh sach mon an'),
+                      _buildSeacrh(),
+                       _buildListMeal()
+                    ]),
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTitle(String title, {bool? haveIcon, IconData? icon, Color? iconColor}) {
+    return Container(
+        padding: EdgeInsets.all(10),
+        child: RichText(
+          text: TextSpan(children: [
+            TextSpan(
+              text: title ?? '',
+              style: TextThemeStyle.textBlackFontSizeBold16
+            ),
+            WidgetSpan(
+              child: (haveIcon ?? false)
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      // Add spacing
+                      child: Container(
+                        width: 17,
+                        height: 17,
+                        decoration: BoxDecoration(
+                          color: iconColor ?? colorPrimary,
+                          // Background color
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            icon ?? Icons.eco,
+                            // Leaf icon
+                            color: Colors.white,
+                            size: 13,
+                          ),
+                        ),
+                      ))
+                  : const SizedBox(),
+            ),
+          ]),
+        ));
+  }
+
+  Widget _buildGridMeal(List<Meal> mealList, String type) {
+    return SizedBox(
+      width: double.infinity,
+      height: 200,
+      child: GridView.builder(
+        scrollDirection: Axis.horizontal,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: 0.7, // Let's try nudging it back up a bit
+        ),
+        itemCount: mealList.length ?? 0,
+        itemBuilder: (context, index) {
+          var vegan = mealList[index];
+          return InkWell(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailMealScreen(
+                    food: vegan,
+                    heroTag: '${vegan.mealID}$type',
+                  ),
+                )),
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  children: [
+                    Hero(
+                      tag: '${vegan.mealID}$type',
+                      child: CachedNetworkImage(
+                        imageUrl: vegan.image ?? '',
+                        alignment: Alignment.center,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => defaultImageEmpty,
+                        errorWidget: (context, url, error) => defaultImageEmpty,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(4),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: colorPrimary700,
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                        ),
+                        child: Text(
+                          vegan.mealName ?? '',
+                          style: TextThemeStyle.textWhiteFontSizeBold11,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Card(
+                        color: Colors.transparent,
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // Distribute space
+                            children: [
+                              _iconAndText(Icons.favorite_rounded,
+                                  vegan.totalLike, Colors.red, 'LIKE'),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              // Add a little space between the icons
+                              _iconAndText(Icons.timer, vegan.totalTime,
+                                  colorBlack, 'TIME',
+                                  textColor: Colors.black),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -83,9 +235,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
         controller: _searchController,
         onClear: (text) {},
         onFieldChange: (value) {},
-        onSubmit: (text) {
-
-        },
+        onSubmit: (text) {},
         hintText: 'Search using food name or category',
         icon: Icons.search,
       ),
@@ -93,178 +243,165 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   }
 
   Widget _buildListMeal() {
-    return Expanded(
-      // Ensures ListView takes available space
-      child: BlocBuilder<MainMenuCubit, MainMenuSearchingState>(
-        buildWhen: (previous, current) {
-          return current is! MainMenuSearchingError ||
-              current is! MainMenuSearchingLoading;
-        },
-        builder: (context, state) {
-          return Skeletonizer(
-            enabled: isLoading ?? true,
-            child: ListView.builder(
-              itemCount: mealList?.length,
-              itemBuilder: (context, index) {
-                var item = mealList?[index];
-                return Card(
-                  child: InkWell(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailMealScreen(
-                            food: item,
+    return ListView.builder(
+      itemCount: mealList?.listMeals?.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        var item = mealList?.listMeals?[index];
+        return Card(
+          child: InkWell(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailMealScreen(
+                    food: item,
+                    heroTag: '${item?.mealID ?? ''}MealList',
+                  ),
+                )),
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image (fixed size to prevent layout issues)
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        // Set the border radius
+                        child: Hero(
+                          tag: '${item?.mealID ?? ''}MealList',
+                          child: CachedNetworkImage(
+                            imageUrl: item?.image ?? '',
+                            alignment: Alignment.center,
+                            fit: BoxFit.fill,
+                            placeholder: (context, url) => defaultImageEmpty,
+                            errorWidget: (context, url, error) =>
+                                defaultImageEmpty,
                           ),
                         )),
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Image (fixed size to prevent layout issues)
-                          SizedBox(
-                            width: 80,
-                            height: 80,
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                // Set the border radius
-                                child: Hero(
-                                  tag: item?.mealID ?? '',
-                                  child: CachedNetworkImage(
-                                    imageUrl: item?.image ?? '',
-                                    alignment: Alignment.center,
-                                    fit: BoxFit.scaleDown,
-                                    placeholder: (context, url) =>
-                                        defaultImageEmpty,
-                                    errorWidget: (context, url, error) =>
-                                        defaultImageEmpty,
-                                  ),
-                                )),
-                          ),
+                  ),
 
-                          const SizedBox(width: 10),
+                  const SizedBox(width: 10),
 
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
                                   children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: item?.mealName ?? '',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors
-                                                    .black, // Ensure text is visible
-                                              ),
-                                            ),
-                                            WidgetSpan(
-                                              child: (item?.isVegan ?? false)
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets
-                                                              .only(left: 6),
-                                                      // Add spacing
-                                                      child: Container(
-                                                        width: 17,
-                                                        height: 17,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: colorPrimary,
-                                                          // Background color
-                                                          shape: BoxShape
-                                                              .circle, // Makes it a circle
-                                                        ),
-                                                        child: Center(
-                                                          child: Icon(
-                                                            Icons.eco,
-                                                            // Leaf icon
-                                                            color:
-                                                                Colors.white,
-                                                            size: 13,
-                                                          ),
-                                                        ),
-                                                      ))
-                                                  : const SizedBox(),
-                                            ),
-                                          ],
-                                        ),
+                                    TextSpan(
+                                      text: item?.mealName ?? '',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors
+                                            .black, // Ensure text is visible
                                       ),
                                     ),
-                                    _iconAndText(
-                                      Icons.favorite_rounded,
-                                      item?.totalLike, // Ensures no null values
-                                      Colors.red,
-                                      'LIKE'
-                                    ),
-                                    _iconAndText(
-                                      Icons.timer,
-                                      item?.totalTime, // Ensures no null values
-                                      colorBlack,
-                                      'TIME'
+                                    WidgetSpan(
+                                      child: (item?.isVegan ?? false)
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 6),
+                                              // Add spacing
+                                              child: Container(
+                                                width: 17,
+                                                height: 17,
+                                                decoration: BoxDecoration(
+                                                  color: colorPrimary,
+                                                  // Background color
+                                                  shape: BoxShape
+                                                      .circle, // Makes it a circle
+                                                ),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.eco,
+                                                    // Leaf icon
+                                                    color: Colors.white,
+                                                    size: 13,
+                                                  ),
+                                                ),
+                                              ))
+                                          : const SizedBox(),
                                     ),
                                   ],
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(4),
-                                  child: Wrap(
-                                      spacing: 8,
-                                      runSpacing: 4,
-                                      children:
-                                          (item?.method ?? []).map((method) {
-                                        return Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4, horizontal: 8),
-                                          decoration: BoxDecoration(
-                                            color: colorPrimary800,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(15)),
-                                          ),
-                                          child: Text(
-                                            method,
-                                            // Display each method separately
-                                            style: TextThemeStyle
-                                                .textWhiteFontSizeBold11,
-                                          ),
-                                        );
-                                      }).toList()),
-                                )
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                            _iconAndText(
+                                Icons.favorite_rounded,
+                                item?.totalLike, // Ensures no null values
+                                Colors.red,
+                                'LIKE'),
+                            _iconAndText(
+                                Icons.timer,
+                                item?.totalTime, // Ensures no null values
+                                colorBlack,
+                                'TIME'),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(4),
+                          child: Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: (item?.method ?? []).map((method) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4, horizontal: 8),
+                                  decoration: BoxDecoration(
+                                    color: colorPrimary800,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
+                                  child: Text(
+                                    method,
+                                    // Display each method separately
+                                    style: TextThemeStyle
+                                        .textWhiteFontSizeBold11,
+                                  ),
+                                );
+                              }).toList()),
+                        )
+                      ],
                     ),
                   ),
-                );
-              },
+                ],
+              ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _iconAndText(IconData icon, int? num, Color color,String type){
+  Widget _iconAndText(IconData icon, int? num, Color color, String type,
+      {Color? textColor}) {
     return Wrap(
       children: [
         Container(
           padding: EdgeInsets.only(right: 1, left: 3),
           child: Text(
-            type == 'LIKE' ? Formatter.formatTotalLike(num) : Formatter.formatTime(num),
-            style: TextThemeStyle
-                .textSecondaryFontSizeBold(15,color: type == 'LIKE' ? colorPink : colorSecondary),
+            type == 'LIKE'
+                ? Formatter.formatTotalLike(num)
+                : Formatter.formatTime(num),
+            style: TextThemeStyle.textSecondaryFontSizeBold(15,
+                color:
+                    type == 'LIKE' ? colorPink : textColor ?? colorSecondary),
           ),
         ),
         Container(
-          padding: EdgeInsets.only(top: 2,),
+          padding: EdgeInsets.only(
+            top: 2,
+          ),
           child: Icon(
             icon,
             size: 18,

@@ -5,8 +5,8 @@ import '../../../../data/constant/constant_app.dart';
 
 class DetailMealForm extends StatefulWidget {
   final Meal? food;
-
-  const DetailMealForm(this.food, {super.key});
+  String? heroTag;
+   DetailMealForm(this.food, this.heroTag, {super.key});
 
   @override
   State<DetailMealForm> createState() => _DetailMealFormState();
@@ -50,7 +50,7 @@ class _DetailMealFormState extends State<DetailMealForm> {
 
               child: FlexibleSpaceBar(
                 background: Hero(
-                  tag: widget.food?.mealID ?? UniqueKey().toString(),
+                  tag: widget.heroTag ?? UniqueKey().toString(),
                   child: CachedNetworkImage(
                       imageUrl: widget.food?.image ?? '',
                     alignment: Alignment.center,

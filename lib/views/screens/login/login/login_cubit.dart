@@ -11,6 +11,11 @@ class LoginCubit extends Cubit<LoginState>{
     emit(LoginLoading());
     try{
       var result = await loginRepository.loginWithGoogle();
+      if(result ?? true){
+        emit(LoginSuccess());
+      }else{
+        emit(LoginFail(error: 'Có lỗi xay ra'));
+      }
     }catch(e){
       emit(LoginFail(error: e.toString()));
     }
@@ -20,6 +25,11 @@ class LoginCubit extends Cubit<LoginState>{
     emit(LoginLoading());
     try{
       var result = await loginRepository.loginWithFacebook();
+      if(result ?? true){
+        emit(LoginSuccess());
+      }else{
+        emit(LoginFail(error: 'Có lỗi xay ra'));
+      }
     }catch(e){
       emit(LoginFail(error: e.toString()));
     }

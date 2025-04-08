@@ -2,6 +2,7 @@ import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/core/styles/text_theme.dart';
 import 'package:cooking_project/data/constant/constant_app.dart';
 import 'package:cooking_project/routes.dart';
+import 'package:cooking_project/views/screens/home/home_screen.dart';
 import 'package:cooking_project/views/screens/login/login/login_cubit.dart';
 import 'package:cooking_project/views/screens/login/login/login_state.dart';
 import 'package:cooking_project/views/screens/login/otp/otp_screen.dart';
@@ -28,7 +29,11 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
         body: BlocListener<LoginCubit, LoginState>(
           listener: (context, state) {
             if(state is LoginSuccess){
-              Navigator.of(context).pop(true);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const HomeScreen()),
+                    (route) => false,
+              );
             }else
             if(state is LoginLoading){
               showProgressDialog(message: '');

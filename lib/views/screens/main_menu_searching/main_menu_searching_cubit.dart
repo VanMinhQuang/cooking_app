@@ -19,4 +19,18 @@ class MainMenuCubit extends Cubit<MainMenuSearchingState>{
     }
 
   }
+
+  void updateIndicator({required String type, required int index}){
+    emit(MainMenuSearchingEmpty());
+    try{
+      if(type == 'FAVORITE'){
+        emit(MainMenuIndicatorFavoriteChanged(index: index));
+      }else{
+        emit(MainMenuIndicatorVeganChanged(index:  index));
+      }
+    }catch(e){
+      emit(MainMenuSearchingError(error: e.toString()));
+    }
+
+  }
 }

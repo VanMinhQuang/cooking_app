@@ -19,6 +19,23 @@ class MainMenuSearchingLoaded extends MainMenuSearchingState{
   List<Object> get props => [foods];
 }
 
+class MainMenuIndicatorFavoriteChanged extends MainMenuSearchingState{
+  int index;
+  MainMenuIndicatorFavoriteChanged({required this.index});
+
+  @override
+  List<Object> get props => [index];
+}
+
+class MainMenuIndicatorVeganChanged extends MainMenuSearchingState{
+
+  int index;
+  MainMenuIndicatorVeganChanged({required this.index});
+
+  @override
+  List<Object> get props => [index];
+}
+
 class MainMenuSearchingError extends MainMenuSearchingState{
   final String error;
 

@@ -17,4 +17,9 @@ class TextThemeStyle{
   static TextStyle textSecondaryFontSizeBold(double fontSize, {Color? color}){
     return TextStyle(color: color ?? colorSecondary,  fontWeight: fontWeight, fontSize: fontSize, fontFamily: fontFamily);
   }
+
+
+  static TextStyle textBlackNoWeightCustomSize(double fontSize){
+    return TextStyle(color: colorLowBlack,   fontSize: fontSize, fontFamily: fontFamily);
+  }
 }

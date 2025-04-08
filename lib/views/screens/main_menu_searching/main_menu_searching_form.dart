@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cooking_project/core/helper/format_number.dart';
 import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/core/styles/icons.dart';
@@ -8,7 +9,9 @@ import 'package:cooking_project/views/screens/login/login/login_state.dart';
 import 'package:cooking_project/views/screens/login/otp/otp_screen.dart';
 import 'package:cooking_project/views/screens/main_menu_searching/main_menu_searching_state.dart';
 import 'package:cooking_project/views/screens/meal/detail_meal/detail_meal_screen.dart';
+import 'package:cooking_project/views/widgets/bar/main_app_bar.dart';
 import 'package:cooking_project/views/widgets/box_field/box_field_widget.dart';
+import 'package:cooking_project/views/widgets/stuffs/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,13 +31,17 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   MainMenuMeal? mealList;
   bool? isLoading = true;
   final _searchController = TextEditingController();
-
+  int? _innerCurrentPageFavorite= 0;
+  int? _innerCurrentPageVegan= 0;
+  CarouselSliderController _carouselController = CarouselSliderController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MainMenuCubit>().loadListFood();
+      Future.delayed(Duration(milliseconds: 300), () {
+        context.read<MainMenuCubit>().loadListFood();
+      });
     });
   }
 
@@ -51,58 +58,69 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
       strokeWidth: 5,
       onRefresh: _refresIndicator,
       child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(
-                width: 2, color: Colors.white24, style: BorderStyle.solid),
-          ),
-          child: BlocConsumer<MainMenuCubit, MainMenuSearchingState>(
-            listener: (context, state) {
-              if (state is MainMenuSearchingLoading) {
-                isLoading = true;
-              } else if (state is MainMenuSearchingEmpty) {
-                isLoading = false;
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text('Error')));
-              } else if (state is MainMenuSearchingLoaded) {
-                isLoading = false;
-                mealList = state.foods;
-              }
-            },
-            builder: (context, state) {
-              return SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                       _buildTitle('Mon an yeu thich nhat',haveIcon: true,icon: Icons.favorite,iconColor: Colors.red),
-                      _buildGridMeal(mealList?.tookMostTimeMeals ?? [], 'FAVORITE'),
-                       _buildTitle('Mon an danh cho nguoi thuc vat',haveIcon: true,icon: Icons.eco,iconColor: colorPrimary),
-                      _buildGridMeal(mealList?.veganMeals ?? [], 'VEGAN'),
-                       _buildTitle('Danh sach mon an'),
-                      _buildSeacrh(),
-                       _buildListMeal()
-                    ]),
-              );
-            },
+        appBar: CustomMealAppBar(),
+        body: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 2,
+                      color: Colors.white24,
+                      style: BorderStyle.solid),
+                ),
+                child: BlocListener<MainMenuCubit, MainMenuSearchingState>(
+                  listener: (context, state) {
+                    if (state is MainMenuSearchingLoading) {
+                      isLoading = true;
+                    } else if (state is MainMenuSearchingError) {
+                      isLoading = false;
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(state.error)));
+                    } else if (state is MainMenuSearchingLoaded) {
+                      isLoading = false;
+                      mealList = state.foods;
+                    }
+                  },
+                  child: BlocBuilder<MainMenuCubit, MainMenuSearchingState>(
+                    buildWhen: (previous, current) =>
+                    current is MainMenuSearchingLoaded,
+                    builder: (context, state) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildSectionTitle("Món ăn yêu thích nhất",icon: Icons.favorite, bgColor: Colors.red),
+                          _buildGridMeal(
+                              mealList?.tookMostTimeMeals ?? [], 'FAVORITE'),
+                          Components.separateLine(),
+                          buildSectionTitle("Món ăn dành cho người thực vật", icon: Icons.eco, bgColor: Colors.green),
+                          _buildGridMeal(mealList?.veganMeals ?? [], 'VEGAN'),
+                          Components.separateLine(),
+                          buildSectionTitle("Danh sach mon an",bgColor: Colors.grey),
+                          _buildSeacrh(),
+                          _buildListMeal()
+                        ]),
+                  )
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTitle(String title, {bool? haveIcon, IconData? icon, Color? iconColor}) {
+  Widget _buildTitle(String title,
+      {bool? haveIcon, IconData? icon, Color? iconColor}) {
     return Container(
         padding: EdgeInsets.all(10),
         child: RichText(
           text: TextSpan(children: [
             TextSpan(
-              text: title ?? '',
-              style: TextThemeStyle.textBlackFontSizeBold16
-            ),
+                text: title ?? '',
+                style: TextThemeStyle.textBlackFontSizeBold16),
             WidgetSpan(
               child: (haveIcon ?? false)
                   ? Padding(
@@ -132,98 +150,210 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   }
 
   Widget _buildGridMeal(List<Meal> mealList, String type) {
-    return SizedBox(
-      width: double.infinity,
-      height: 200,
-      child: GridView.builder(
-        scrollDirection: Axis.horizontal,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          childAspectRatio: 0.7, // Let's try nudging it back up a bit
-        ),
-        itemCount: mealList.length ?? 0,
-        itemBuilder: (context, index) {
-          var vegan = mealList[index];
-          return InkWell(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailMealScreen(
-                    food: vegan,
-                    heroTag: '${vegan.mealID}$type',
-                  ),
-                )),
-            child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Stack(
-                  children: [
-                    Hero(
-                      tag: '${vegan.mealID}$type',
-                      child: CachedNetworkImage(
-                        imageUrl: vegan.image ?? '',
-                        alignment: Alignment.center,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => defaultImageEmpty,
-                        errorWidget: (context, url, error) => defaultImageEmpty,
-                        width: double.infinity,
-                        height: double.infinity,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(4),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 8),
-                        decoration: BoxDecoration(
-                          color: colorPrimary700,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                        ),
-                        child: Text(
-                          vegan.mealName ?? '',
-                          style: TextThemeStyle.textWhiteFontSizeBold11,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      child: Card(
-                        color: Colors.transparent,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            // Distribute space
-                            children: [
-                              _iconAndText(Icons.favorite_rounded,
-                                  vegan.totalLike, Colors.red, 'LIKE'),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              // Add a little space between the icons
-                              _iconAndText(Icons.timer, vegan.totalTime,
-                                  colorBlack, 'TIME',
-                                  textColor: Colors.black),
-                            ],
+    return BlocListener<MainMenuCubit,MainMenuSearchingState>(
+      listener: ( context,  state) {
+        if(state is MainMenuIndicatorFavoriteChanged){
+          _innerCurrentPageFavorite = state.index;
+        }
+        else if(state is MainMenuIndicatorVeganChanged){
+          _innerCurrentPageVegan = state.index;
+        }
+      },
+      child: BlocBuilder<MainMenuCubit,MainMenuSearchingState>(
+        buildWhen: (previous, current) => current is MainMenuIndicatorFavoriteChanged || current is MainMenuIndicatorVeganChanged,
+        builder: (context, state) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                  padding: EdgeInsets.only(bottom: 10),
+                  width: double.infinity,
+                  height: 220,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            enlargeCenterPage: true,
+                            autoPlay: true,
+                            onPageChanged: (index, reason) {
+                              if(type == 'FAVORITE'){
+                                context.read<MainMenuCubit>().updateIndicator(type: type, index: index);
+                              }else{
+                                context.read<MainMenuCubit>().updateIndicator(type: type, index: index);
+                              }
+                            },
+                          ),
+                          carouselController: _carouselController,
+                          items: List.generate(
+                            mealList.length,
+                                (index) {
+                              return _buildItemCarousel(mealList[index], type);
+                            },
                           ),
                         ),
                       ),
-                    ),
-                  ],
+
+                    ],
+                  )),
+              Positioned(
+                bottom: 220 * 0.002,
+                child: Row(
+                  children: List.generate(mealList.length, (index) {
+                    bool isSelected = type != 'FAVORITE' ? _innerCurrentPageVegan == index : _innerCurrentPageFavorite == index;
+                    return AnimatedContainer(
+                        width: isSelected ? 50 : 17,
+                        height: 10,
+                        margin: EdgeInsets.symmetric(horizontal: isSelected ? 6 : 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: isSelected ? colorPrimary : Colors.grey[400],
+                        ),
+
+                        duration: const Duration(milliseconds: 300));
+                  },)
+                  ,
                 ),
-              ),
-            ),
+              )
+            ],
           );
         },
+      )
+    );
+
+  }
+
+  Widget buildSectionTitle(String title, {IconData? icon, required Color bgColor }) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color:  bgColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          icon == null ?  const SizedBox() :Icon(icon, color: bgColor, size: 20),
+          SizedBox(width: 8),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemCarousel(Meal vegan, String type) {
+    return InkWell(
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailMealScreen(
+              food: vegan,
+              heroTag: '${vegan.mealID}$type',
+            ),
+          )),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(12) ),
+            child: Stack(
+              children: [
+                Hero(
+                  tag: '${vegan.mealID}$type',
+                  child: CachedNetworkImage(
+                    imageUrl: vegan.image ?? '',
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => defaultImageEmpty,
+                    errorWidget: (context, url, error) => defaultImageEmpty,
+                    height: 220,
+                    width: double.infinity,
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Card(
+                      color: Colors.transparent,
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: (vegan.isVegan ?? false)
+                          ? Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: colorPrimary,
+                                // Background color
+                                shape: BoxShape.circle, // Makes it a circle
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.eco,
+                                  // Leaf icon
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            )
+                          : const SizedBox()),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 8,
+            left: 8,
+            right: 8,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Constrained name that won't overflow
+                  Expanded(
+                    child: Text(
+                      vegan.mealName ?? '',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  // Like icon and count
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.favorite, color: Colors.red, size: 16),
+                      SizedBox(width: 4),
+                      Text(
+                        '${vegan.totalLike}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -243,172 +373,155 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   }
 
   Widget _buildListMeal() {
-    return ListView.builder(
-      itemCount: mealList?.listMeals?.length,
+    final list = mealList?.listMeals ?? [];
+
+    return GridView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
+      // Let parent scroll handle it
+      padding: const EdgeInsets.all(8),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, childAspectRatio: 3 / 2.5, crossAxisSpacing: 2),
+      itemCount: list.length,
       itemBuilder: (context, index) {
-        var item = mealList?.listMeals?[index];
-        return Card(
-          child: InkWell(
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailMealScreen(
-                    food: item,
-                    heroTag: '${item?.mealID ?? ''}MealList',
-                  ),
-                )),
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Image (fixed size to prevent layout issues)
-                  SizedBox(
-                    width: 80,
-                    height: 80,
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        // Set the border radius
-                        child: Hero(
-                          tag: '${item?.mealID ?? ''}MealList',
-                          child: CachedNetworkImage(
-                            imageUrl: item?.image ?? '',
-                            alignment: Alignment.center,
-                            fit: BoxFit.fill,
-                            placeholder: (context, url) => defaultImageEmpty,
-                            errorWidget: (context, url, error) =>
-                                defaultImageEmpty,
-                          ),
-                        )),
-                  ),
+        var item = list[index];
+        return _buildGridItem(item);
+      },
+    );
+  }
 
-                  const SizedBox(width: 10),
-
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: item?.mealName ?? '',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors
-                                            .black, // Ensure text is visible
-                                      ),
-                                    ),
-                                    WidgetSpan(
-                                      child: (item?.isVegan ?? false)
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 6),
-                                              // Add spacing
-                                              child: Container(
-                                                width: 17,
-                                                height: 17,
-                                                decoration: BoxDecoration(
-                                                  color: colorPrimary,
-                                                  // Background color
-                                                  shape: BoxShape
-                                                      .circle, // Makes it a circle
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.eco,
-                                                    // Leaf icon
-                                                    color: Colors.white,
-                                                    size: 13,
-                                                  ),
-                                                ),
-                                              ))
-                                          : const SizedBox(),
-                                    ),
-                                  ],
+  Widget _buildGridItem(Meal item) {
+    return Card(
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailMealScreen(
+              food: item,
+              heroTag: '${item.mealID ?? ''}MealGrid',
+            ),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Hero(
+                  tag: '${item.mealID ?? ''}MealGrid',
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      imageUrl: item.image ?? '',
+                      width: double.infinity,
+                      height: 100,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => defaultImageEmpty,
+                      errorWidget: (context, url, error) => defaultImageEmpty,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Card(
+                      color: Colors.transparent,
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: (item.isVegan ?? false)
+                          ? Container(
+                              width: 25,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: colorPrimary,
+                                // Background color
+                                shape: BoxShape.circle, // Makes it a circle
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.eco,
+                                  // Leaf icon
+                                  color: Colors.white,
+                                  size: 15,
                                 ),
                               ),
-                            ),
-                            _iconAndText(
-                                Icons.favorite_rounded,
-                                item?.totalLike, // Ensures no null values
-                                Colors.red,
-                                'LIKE'),
-                            _iconAndText(
-                                Icons.timer,
-                                item?.totalTime, // Ensures no null values
-                                colorBlack,
-                                'TIME'),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(4),
-                          child: Wrap(
-                              spacing: 8,
-                              runSpacing: 4,
-                              children: (item?.method ?? []).map((method) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 4, horizontal: 8),
-                                  decoration: BoxDecoration(
-                                    color: colorPrimary800,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15)),
-                                  ),
-                                  child: Text(
-                                    method,
-                                    // Display each method separately
-                                    style: TextThemeStyle
-                                        .textWhiteFontSizeBold11,
-                                  ),
-                                );
-                              }).toList()),
-                        )
-                      ],
+                            )
+                          : const SizedBox()),
+                ),
+              ],
+            ),
+            const SizedBox(height: 2),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.greenAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        item.mealName ?? '',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+
+                        maxLines: 1,
+                      ),
                     ),
+                  ),
+                  SizedBox(width: 6),
+                  // Let icon take only needed space
+                  _iconAndText(
+                    Icons.favorite_rounded,
+                    item.totalLike,
+                    Colors.red,
+                    'LIKE',
                   ),
                 ],
               ),
-            ),
-          ),
-        );
-      },
+            )
+          ],
+        ),
+      ),
     );
   }
 
   Widget _iconAndText(IconData icon, int? num, Color color, String type,
       {Color? textColor}) {
-    return Wrap(
-      children: [
-        Container(
-          padding: EdgeInsets.only(right: 1, left: 3),
-          child: Text(
-            type == 'LIKE'
-                ? Formatter.formatTotalLike(num)
-                : Formatter.formatTime(num),
-            style: TextThemeStyle.textSecondaryFontSizeBold(15,
-                color:
-                    type == 'LIKE' ? colorPink : textColor ?? colorSecondary),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: colorWhite),
+      child: Wrap(
+        children: [
+          Container(
+            padding: EdgeInsets.only(right: 1, left: 3),
+            child: Text(
+              type == 'LIKE'
+                  ? Formatter.formatTotalLike(num)
+                  : Formatter.formatTime(num),
+              style: TextThemeStyle.textSecondaryFontSizeBold(12,
+                  color:
+                      type == 'LIKE' ? colorPink : textColor ?? colorSecondary),
+            ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.only(
-            top: 2,
-          ),
-          child: Icon(
-            icon,
-            size: 18,
-            color: color,
-          ),
-        )
-      ],
+          Container(
+            padding: EdgeInsets.only(
+              top: 2,
+            ),
+            child: Icon(
+              icon,
+              size: 15,
+              color: color,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

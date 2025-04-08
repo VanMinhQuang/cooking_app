@@ -1,3 +1,4 @@
+import 'package:cooking_project/core/styles/text_theme.dart';
 import 'package:flutter/material.dart';
 
 typedef OnClear = void Function(String text);
@@ -13,7 +14,7 @@ class BoxFieldSearch extends StatelessWidget {
   final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
 
-   BoxFieldSearch({
+   const BoxFieldSearch({
     Key? key,
     required this.controller,
     this.hintText,
@@ -31,8 +32,8 @@ class BoxFieldSearch extends StatelessWidget {
     return Container(
       height: 50, // Adjust height
       decoration: BoxDecoration(
-        border: Border.all(width: 2, color: Colors.black), // Customize border
-        borderRadius: BorderRadius.circular(8), // Rounded corners
+        border: Border.all(width: 2, color: Colors.grey), // Customize border
+        borderRadius: BorderRadius.circular(12), // Rounded corners
       ),
         padding: EdgeInsets.symmetric(
             vertical: 0,
@@ -47,7 +48,7 @@ class BoxFieldSearch extends StatelessWidget {
             left: 0,
           ),
           prefixIcon: Icon(Icons.search,
-              color: Colors.grey, size: 24),
+              color: Colors.grey, size: 16),
           suffixIcon: controller.text.isEmpty
               ? const SizedBox()
               : IconButton(
@@ -59,14 +60,14 @@ class BoxFieldSearch extends StatelessWidget {
               FocusScope.of(context).unfocus();
             },
             icon: const Icon(Icons.close,
-                color: Colors.black, size: 16),
+                color: Colors.black, size: 13),
           ),
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey), // Adjust hint color
           border: InputBorder.none, // Remove default border
 
         ),
-        style: TextStyle(fontSize: 16), // Set font size
+        style: TextThemeStyle.textBlackNoWeightCustomSize(13), // Set font size
         onChanged: (value) {
           if(onFieldChange != null){
             onFieldChange!(value);

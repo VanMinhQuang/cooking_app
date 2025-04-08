@@ -29,6 +29,7 @@ class _SettingFormState extends State<SettingForm> {
               SizedBox(height: 8),
               _buildOptionCard(Icons.text_format, "Đánh giá app"),
               _buildOptionCard(Icons.language, "Ngôn ngữ"),
+
             ],
           ),
         ),

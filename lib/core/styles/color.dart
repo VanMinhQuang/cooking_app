@@ -19,3 +19,5 @@ const  colorWhite = Colors.white;
 
 const colorRed = Colors.redAccent;
 const colorPink = Colors.pink;
+
+const colorLowBlack = Colors.black38;

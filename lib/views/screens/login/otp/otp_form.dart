@@ -47,7 +47,7 @@ class _OtpFormState extends State<OtpForm> with ProgressDialogMixin {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => const HomeScreen()),
-              (route) => false, // Removes all previous screens from the stack
+              (route) => false,
             );
           } else if (state is OtpFail) {
             hideProgressDialog();

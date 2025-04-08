@@ -40,27 +40,25 @@ class _HomeFormState extends State<HomeForm> {
             context.read<HomeCubit>().changePageIndex(index);
           },
         ),
-        body: SafeArea(
-          child: BlocListener<HomeCubit, HomeState>(
-            listener: (context, state) {
-              if (state is ChangeIndexBottomBarState) {
-                if (selectedIndex != state.index) {
+        body: BlocListener<HomeCubit, HomeState>(
+          listener: (context, state) {
+            if (state is ChangeIndexBottomBarState) {
+              if (selectedIndex != state.index) {
 
-                    selectedIndex = state.index;
+                  selectedIndex = state.index;
 
 
-                }
               }
-            },
+            }
+          },
 
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (BuildContext context, state) {
-                return IndexedStack(
-                  index: selectedIndex,
-                  children: _listWidget,
-                );
-              },
-            ),
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (BuildContext context, state) {
+              return IndexedStack(
+                index: selectedIndex,
+                children: _listWidget,
+              );
+            },
           ),
         ));
   }

@@ -35,7 +35,7 @@ class MainMenuMeal{
 
   static MainMenuMeal generateStaticData() {
     return MainMenuMeal(
-      mostLikeMeals: List.generate(10, (index) => Meal(
+      mostLikeMeals: List.generate(16, (index) => Meal(
         mealID: 'meal$index',
         mealName: 'Meal Name $index',
         method: ['Cook', 'Serve'],
@@ -44,7 +44,7 @@ class MainMenuMeal{
         totalLike: 100 + (index * 10),
         isVegan: index.isEven,
       )),
-      tookMostTimeMeals: List.generate(10, (index) => Meal(
+      tookMostTimeMeals: List.generate(15, (index) => Meal(
         mealID: 'meal$index',
         mealName: 'Meal Name $index',
         method: ['Cook', 'Serve'],
@@ -53,7 +53,7 @@ class MainMenuMeal{
         totalLike: 50 + (index * 5),
         isVegan: index.isOdd,
       )),
-      veganMeals: List.generate(10, (index) => Meal(
+      veganMeals: List.generate(16, (index) => Meal(
         mealID: 'meal$index',
         mealName: 'Vegan Meal Name $index',
         method: ['Cook', 'Serve'],
@@ -62,7 +62,7 @@ class MainMenuMeal{
         totalLike: 80 + (index * 8),
         isVegan: true,
       )),
-      listMeals: List.generate(10, (index) => Meal(
+      listMeals: List.generate(20, (index) => Meal(
         mealID: 'meal$index',
         mealName: 'List Meal Name $index',
         method: ['Cook', 'Serve'],

@@ -10,4 +10,10 @@ Image logoImage = Image.asset('assets/image/logo.png');
 
 Image googleIcon = Image.asset('assets/image/icon-google.png');
 
+Image proteinIcon = Image.asset('assets/image/icon-steak.png');
+
+Image carbIcon = Image.asset('assets/image/icon-carb.png');
+
+Image fatIcon = Image.asset('assets/image/icon-fat.png');
+
 String api_url = 'https://cooking-meal-service-2.onrender.com/';

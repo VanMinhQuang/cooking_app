@@ -54,6 +54,8 @@ dependencies:
   flutter_facebook_auth: ^6.0.0
   flutter_otp_text_field: ^1.1.0+2
   carousel_slider: ^5.0.0
+  fl_chart: ^0.70.2
+  percent_indicator: ^4.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -81,17 +83,21 @@ flutter:
     - assets/font/
     - assets/image/logo.png
   fonts:
+    - family: FontAwesomeProThin
+      fonts:
+        - asset: assets/font/fa-pro-thin-300.ttf
+          weight: 300
     - family: FontAwesomeProLight
       fonts:
-        - asset: assets/font/fa-brands-400.ttf
+        - asset: assets/font/fa-pro-light-400.ttf
           weight: 400
     - family: FontAwesomeProRegular
       fonts:
-        - asset: assets/font/fa-regular-400.ttf
+        - asset: assets/font/fa-pro-regular-400.ttf
           weight: 400
     - family: FontAwesomeProSolid
       fonts:
-        - asset: assets/font/fa-solid-900.ttf
+        - asset: assets/font/fa-pro-solid-900.ttf
           weight: 900
   # To add assets to your application, add an assets section, like this:
   # assets:

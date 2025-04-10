@@ -1,3 +1,4 @@
+import 'package:cooking_project/core/styles/color.dart';
 import 'package:flutter/material.dart';
 
 class CustomMealAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -11,7 +12,7 @@ class CustomMealAppBar extends StatelessWidget implements PreferredSizeWidget {
         bottomRight: Radius.circular(30),
       ),
       child: Container(
-        color: Color(0xFFAEDDC5), // mint green
+        color: colorMintGreen, // mint green
         height: preferredSize.height,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SafeArea(

@@ -1,3 +1,4 @@
+import 'package:cooking_project/views/screens/daily_meal/daily_meal_screen.dart';
 import 'package:cooking_project/views/screens/home/home_cubit.dart';
 import 'package:cooking_project/views/screens/home/home_screen.dart';
 import 'package:cooking_project/views/screens/home/home_state.dart';
@@ -28,7 +29,7 @@ class _HomeFormState extends State<HomeForm> {
     // TODO: implement initState
     super.initState();
     _listWidget
-        .addAll([widget1(), MainMenuSearchingScreen(), SettingScreen()]);
+        .addAll([DailyMealScreen(), MainMenuSearchingScreen(), SettingScreen()]);
   }
 
   @override
@@ -54,9 +55,11 @@ class _HomeFormState extends State<HomeForm> {
 
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (BuildContext context, state) {
-              return IndexedStack(
-                index: selectedIndex,
-                children: _listWidget,
+              return  IndexedStack(
+               //   key: ValueKey<int>(selectedIndex),
+                  index: selectedIndex,
+                  children: _listWidget,
+
               );
             },
           ),

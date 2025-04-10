@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cooking_project/core/helper/general.dart';
+import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/data/constant/constant_app.dart';
 import 'package:cooking_project/routes.dart';
 import 'package:cooking_project/views/screens/login/login/login_screen.dart';
@@ -29,7 +31,7 @@ class _SettingFormState extends State<SettingForm> {
               SizedBox(height: 8),
               _buildOptionCard(Icons.text_format, "Đánh giá app"),
               _buildOptionCard(Icons.language, "Ngôn ngữ"),
-
+              _buildOptionCard(Icons.account_circle, "Đăng xuất", color: colorRed.shade100)
             ],
           ),
         ),
@@ -66,9 +68,9 @@ class _SettingFormState extends State<SettingForm> {
     );
   }
 
-  Widget _buildOptionCard(IconData icon, String title) {
+  Widget _buildOptionCard(IconData icon, String title, {Color? color}) {
     return Card(
-      color:  Colors.white,
+      color: color ?? colorWhite,
       shape: RoundedRectangleBorder(
         side:  BorderSide.none,
         borderRadius: BorderRadius.circular(8.0),
@@ -76,12 +78,12 @@ class _SettingFormState extends State<SettingForm> {
       child: InkWell(
 
         onTap: () {
-          print('');
+
         },
         child: ListTile(
           leading: Icon(icon, color: Colors.black54),
           title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-          trailing: Icon(Icons.arrow_forward_ios, size: 16),
+          trailing: Icon(title == 'Đăng xuất' ? Icons.logout : Icons.arrow_forward_ios, size: 16),
         ),
       ),
     );

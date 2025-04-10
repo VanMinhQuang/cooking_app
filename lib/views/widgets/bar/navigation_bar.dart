@@ -16,9 +16,9 @@ class CustomNavigationBar extends StatelessWidget {
           borderRadius: BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40))
       ),
       child: GNav(
-          rippleColor: colorPrimary800,
-          hoverColor: colorPrimary700,
-          tabBackgroundColor: Colors.green,
+          rippleColor: colorMintGreen,
+          hoverColor: colorMintGreen,
+          tabBackgroundColor: colorMintGreen,
           tabBorderRadius: 40,
           gap: 16,
           onTabChange: (value)  {

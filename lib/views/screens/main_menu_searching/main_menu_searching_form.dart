@@ -11,6 +11,7 @@ import 'package:cooking_project/views/screens/main_menu_searching/main_menu_sear
 import 'package:cooking_project/views/screens/meal/detail_meal/detail_meal_screen.dart';
 import 'package:cooking_project/views/widgets/bar/main_app_bar.dart';
 import 'package:cooking_project/views/widgets/box_field/box_field_widget.dart';
+import 'package:cooking_project/views/widgets/carousel/meal_carousel/meal_carousel.dart';
 import 'package:cooking_project/views/widgets/stuffs/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,8 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   final _searchController = TextEditingController();
   int? _innerCurrentPageFavorite= 0;
   int? _innerCurrentPageVegan= 0;
-  CarouselSliderController _carouselController = CarouselSliderController();
+  final CarouselSliderController _carouselController = CarouselSliderController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -62,92 +64,53 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
         body: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 2,
-                      color: Colors.white24,
-                      style: BorderStyle.solid),
-                ),
-                child: BlocListener<MainMenuCubit, MainMenuSearchingState>(
-                  listener: (context, state) {
-                    if (state is MainMenuSearchingLoading) {
-                      isLoading = true;
-                    } else if (state is MainMenuSearchingError) {
-                      isLoading = false;
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text(state.error)));
-                    } else if (state is MainMenuSearchingLoaded) {
-                      isLoading = false;
-                      mealList = state.foods;
-                    }
-                  },
-                  child: BlocBuilder<MainMenuCubit, MainMenuSearchingState>(
-                    buildWhen: (previous, current) =>
-                    current is MainMenuSearchingLoaded,
-                    builder: (context, state) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          buildSectionTitle("Món ăn yêu thích nhất",icon: Icons.favorite, bgColor: Colors.red),
-                          _buildGridMeal(
-                              mealList?.tookMostTimeMeals ?? [], 'FAVORITE'),
-                          Components.separateLine(),
-                          buildSectionTitle("Món ăn dành cho người thực vật", icon: Icons.eco, bgColor: Colors.green),
-                          _buildGridMeal(mealList?.veganMeals ?? [], 'VEGAN'),
-                          Components.separateLine(),
-                          buildSectionTitle("Danh sach mon an",bgColor: Colors.grey),
-                          _buildSeacrh(),
-                          _buildListMeal()
-                        ]),
-                  )
-                ),
-              ),
-            ],
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 2,
+                  color: Colors.white24,
+                  style: BorderStyle.solid),
+            ),
+            child: BlocListener<MainMenuCubit, MainMenuSearchingState>(
+              listener: (context, state) {
+                if (state is MainMenuSearchingLoading) {
+                  isLoading = true;
+                } else if (state is MainMenuSearchingError) {
+                  isLoading = false;
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(state.error)));
+                } else if (state is MainMenuSearchingLoaded) {
+                  isLoading = false;
+                  mealList = state.foods;
+                }
+              },
+              child: BlocBuilder<MainMenuCubit, MainMenuSearchingState>(
+                buildWhen: (previous, current) =>
+                current is MainMenuSearchingLoaded,
+                builder: (context, state) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildSectionTitle("Món ăn yêu thích nhất",icon: Icons.favorite, bgColor: Colors.red),
+                      Skeletonizer(enabled: isLoading ?? false, child: MealCarouselWidget(mealList: mealList?.tookMostTimeMeals ?? [], type: 'FAVORITE',)),
+
+                      Components.separateLine(),
+                      buildSectionTitle("Món ăn dành cho người thực vật", icon: Icons.eco, bgColor: Colors.green),
+                    //  _buildGridMeal(mealList?.veganMeals ?? [], 'VEGAN'),
+                      Skeletonizer(enabled: isLoading ?? false, child: MealCarouselWidget(mealList: mealList?.tookMostTimeMeals ?? [], type: 'FAVORITE',)),
+                      Components.separateLine(),
+                      buildSectionTitle("Danh sach mon an",bgColor: Colors.grey),
+                      _buildSeacrh(),
+                      _buildListMeal()
+                    ]),
+              )
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTitle(String title,
-      {bool? haveIcon, IconData? icon, Color? iconColor}) {
-    return Container(
-        padding: EdgeInsets.all(10),
-        child: RichText(
-          text: TextSpan(children: [
-            TextSpan(
-                text: title ?? '',
-                style: TextThemeStyle.textBlackFontSizeBold16),
-            WidgetSpan(
-              child: (haveIcon ?? false)
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 6),
-                      // Add spacing
-                      child: Container(
-                        width: 17,
-                        height: 17,
-                        decoration: BoxDecoration(
-                          color: iconColor ?? colorPrimary,
-                          // Background color
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            icon ?? Icons.eco,
-                            // Leaf icon
-                            color: Colors.white,
-                            size: 13,
-                          ),
-                        ),
-                      ))
-                  : const SizedBox(),
-            ),
-          ]),
-        ));
-  }
 
   Widget _buildGridMeal(List<Meal> mealList, String type) {
     return BlocListener<MainMenuCubit,MainMenuSearchingState>(
@@ -166,7 +129,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
             alignment: Alignment.center,
             children: [
               Container(
-                  padding: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(bottom: 20),
                   width: double.infinity,
                   height: 220,
                   child: Stack(
@@ -224,26 +187,30 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   }
 
   Widget buildSectionTitle(String title, {IconData? icon, required Color bgColor }) {
-    return Container(
+    return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color:  bgColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          icon == null ?  const SizedBox() :Icon(icon, color: bgColor, size: 20),
-          SizedBox(width: 8),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+      elevation: 4,
+      child: Container(
+
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color:  bgColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            icon == null ?  const SizedBox() :Icon(icon, color: bgColor, size: 20),
+            SizedBox(width: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

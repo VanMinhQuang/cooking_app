@@ -21,3 +21,5 @@ const colorRed = Colors.redAccent;
 const colorPink = Colors.pink;
 
 const colorLowBlack = Colors.black38;
+
+const colorMintGreen = Color(0xFFAEDDC5);

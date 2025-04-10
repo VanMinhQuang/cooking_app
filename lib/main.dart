@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cooking_project/core/helper/screen_app.dart';
 import 'package:cooking_project/routes.dart';
 import 'package:cooking_project/views/screens/home/home_screen.dart';
 import 'package:cooking_project/views/screens/login/login/login_screen.dart';
@@ -65,9 +66,10 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+
   @override
   Widget build(BuildContext context) {
-
+    ScreenApp.init(context);
     LocalizationService().init(context);
     return LocalizationProvider(
         state: LocalizationProvider.of(context).state,

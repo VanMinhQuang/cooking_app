@@ -112,79 +112,6 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   }
 
 
-  Widget _buildGridMeal(List<Meal> mealList, String type) {
-    return BlocListener<MainMenuCubit,MainMenuSearchingState>(
-      listener: ( context,  state) {
-        if(state is MainMenuIndicatorFavoriteChanged){
-          _innerCurrentPageFavorite = state.index;
-        }
-        else if(state is MainMenuIndicatorVeganChanged){
-          _innerCurrentPageVegan = state.index;
-        }
-      },
-      child: BlocBuilder<MainMenuCubit,MainMenuSearchingState>(
-        buildWhen: (previous, current) => current is MainMenuIndicatorFavoriteChanged || current is MainMenuIndicatorVeganChanged,
-        builder: (context, state) {
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                  padding: EdgeInsets.only(bottom: 20),
-                  width: double.infinity,
-                  height: 220,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            enlargeCenterPage: true,
-                            autoPlay: true,
-                            onPageChanged: (index, reason) {
-                              if(type == 'FAVORITE'){
-                                context.read<MainMenuCubit>().updateIndicator(type: type, index: index);
-                              }else{
-                                context.read<MainMenuCubit>().updateIndicator(type: type, index: index);
-                              }
-                            },
-                          ),
-                          carouselController: _carouselController,
-                          items: List.generate(
-                            mealList.length,
-                                (index) {
-                              return _buildItemCarousel(mealList[index], type);
-                            },
-                          ),
-                        ),
-                      ),
-
-                    ],
-                  )),
-              Positioned(
-                bottom: 220 * 0.002,
-                child: Row(
-                  children: List.generate(mealList.length, (index) {
-                    bool isSelected = type != 'FAVORITE' ? _innerCurrentPageVegan == index : _innerCurrentPageFavorite == index;
-                    return AnimatedContainer(
-                        width: isSelected ? 50 : 17,
-                        height: 10,
-                        margin: EdgeInsets.symmetric(horizontal: isSelected ? 6 : 3),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(40),
-                          color: isSelected ? colorPrimary : Colors.grey[400],
-                        ),
-
-                        duration: const Duration(milliseconds: 300));
-                  },)
-                  ,
-                ),
-              )
-            ],
-          );
-        },
-      )
-    );
-
-  }
 
   Widget buildSectionTitle(String title, {IconData? icon, required Color bgColor }) {
     return Card(
@@ -348,7 +275,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
       // Let parent scroll handle it
       padding: const EdgeInsets.all(8),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 3 / 2.5, crossAxisSpacing: 2),
+          crossAxisCount: 2, childAspectRatio: 3 / 2.5),
       itemCount: list.length,
       itemBuilder: (context, index) {
         var item = list[index];
@@ -421,7 +348,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
             ),
             const SizedBox(height: 2),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

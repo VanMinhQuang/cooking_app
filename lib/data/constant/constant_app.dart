@@ -16,4 +16,6 @@ Image carbIcon = Image.asset('assets/image/icon-carb.png');
 
 Image fatIcon = Image.asset('assets/image/icon-fat.png');
 
+Image fiberIcon = Image.asset('assets/image/icon-fiber.png');
+
 String api_url = 'https://cooking-meal-service-2.onrender.com/';

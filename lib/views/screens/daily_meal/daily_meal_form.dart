@@ -324,11 +324,6 @@ class _DailyMealFormState extends State<DailyMealForm>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildMealWidget(),
-        _buildMealWidget(),
-        _buildMealWidget(),
-        _buildMealWidget(),
-        _buildMealWidget(),
-        _buildMealWidget(),
         _buildMealWidget()
       ],
     );

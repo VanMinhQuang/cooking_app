@@ -1,8 +1,13 @@
 import 'package:cooking_project/core/styles/color.dart';
+import 'package:cooking_project/views/widgets/box_field/box_field_widget.dart';
 import 'package:flutter/material.dart';
 
 class CustomMealAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomMealAppBar({super.key});
+  final bool? isHaveSearchField;
+  const CustomMealAppBar({
+    super.key,
+    this.isHaveSearchField
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,30 +31,46 @@ class CustomMealAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: Colors.white,
               ),
 
-              // Title
-              Text(
-                'Meal For U',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                  color: Colors.white,
+              Expanded(
+                child: Center(
+                  child: Text(
+                    'Meal For U',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
 
-              // Right Icon
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.person_outline),
-                color: Colors.white,
+
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.person_outline),
+                    color: Colors.white,
+                  ),
+                  if (isHaveSearchField ?? false)
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.search),
+                      color: Colors.white,
+                    ),
+                  // Person Outline Icon
+
+                ],
               ),
             ],
-          ),
+          )
         ),
       ),
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize =>  Size.fromHeight(80);
 }

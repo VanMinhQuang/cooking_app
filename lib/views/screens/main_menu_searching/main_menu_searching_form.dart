@@ -1,21 +1,19 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cooking_project/core/helper/format_number.dart';
 import 'package:cooking_project/core/styles/color.dart';
-import 'package:cooking_project/core/styles/icons.dart';
 import 'package:cooking_project/core/styles/text_theme.dart';
 import 'package:cooking_project/data/model/meal_model.dart';
-import 'package:cooking_project/views/screens/login/login/login_state.dart';
-import 'package:cooking_project/views/screens/login/otp/otp_screen.dart';
 import 'package:cooking_project/views/screens/main_menu_searching/main_menu_searching_state.dart';
+import 'package:cooking_project/views/screens/main_menu_searching/widget/meal_card.dart';
 import 'package:cooking_project/views/screens/meal/detail_meal/detail_meal_screen.dart';
 import 'package:cooking_project/views/widgets/bar/main_app_bar.dart';
 import 'package:cooking_project/views/widgets/box_field/box_field_widget.dart';
+import 'package:cooking_project/views/widgets/carousel/meal_carousel/animated_meal_carousel.dart';
 import 'package:cooking_project/views/widgets/carousel/meal_carousel/meal_carousel.dart';
 import 'package:cooking_project/views/widgets/stuffs/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/constant/constant_app.dart';
@@ -32,18 +30,13 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   MainMenuMeal? mealList;
   bool? isLoading = true;
   final _searchController = TextEditingController();
-  int? _innerCurrentPageFavorite= 0;
-  int? _innerCurrentPageVegan= 0;
-  final CarouselSliderController _carouselController = CarouselSliderController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(milliseconds: 300), () {
         context.read<MainMenuCubit>().loadListFood();
-      });
     });
   }
 
@@ -60,7 +53,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
       strokeWidth: 5,
       onRefresh: _refresIndicator,
       child: Scaffold(
-        appBar: CustomMealAppBar(),
+        appBar: CustomMealAppBar(isHaveSearchField: true,),
         body: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
@@ -91,17 +84,15 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
                 builder: (context, state) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildSectionTitle("Món ăn yêu thích nhất",icon: Icons.favorite, bgColor: Colors.red),
-                      Skeletonizer(enabled: isLoading ?? false, child: MealCarouselWidget(mealList: mealList?.tookMostTimeMeals ?? [], type: 'FAVORITE',)),
-
-                      Components.separateLine(),
-                      buildSectionTitle("Món ăn dành cho người thực vật", icon: Icons.eco, bgColor: Colors.green),
-                    //  _buildGridMeal(mealList?.veganMeals ?? [], 'VEGAN'),
-                      Skeletonizer(enabled: isLoading ?? false, child: MealCarouselWidget(mealList: mealList?.tookMostTimeMeals ?? [], type: 'FAVORITE',)),
-                      Components.separateLine(),
-                      buildSectionTitle("Danh sach mon an",bgColor: Colors.grey),
-                      _buildSeacrh(),
-                      _buildListMeal()
+                       buildSectionTitle('Món ăn yêu thích nhất',icon: Icons.favorite, bgColor: Colors.red),
+                       Skeletonizer(enabled: isLoading ?? false, child: MealCarouselWidget(mealList: mealList?.tookMostTimeMeals ?? [], type: 'FAVORITE',)),
+                       Components.separateLine(),
+                       buildSectionTitle('Món ăn dành cho người thực vật', icon: Icons.eco, bgColor: Colors.green),
+                       Skeletonizer(enabled: isLoading ?? false, child: MealCarouselWidget(mealList: mealList?.tookMostTimeMeals ?? [], type: 'FAVORITE',)),
+                       Components.separateLine(),
+                       buildSectionTitle('Danh muc',bgColor: Colors.grey, paddingBottom: 3),
+                    //  // _buildSeacrh(),
+                       _buildListMeal()
                     ]),
               )
             ),
@@ -113,13 +104,13 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
 
 
 
-  Widget buildSectionTitle(String title, {IconData? icon, required Color bgColor }) {
+  Widget buildSectionTitle(String title, {IconData? icon, required Color bgColor, double? paddingBottom }) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: paddingBottom ?? 12),
       elevation: 4,
       child: Container(
 
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical:  6),
         decoration: BoxDecoration(
           color:  bgColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
@@ -142,116 +133,6 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
     );
   }
 
-  Widget _buildItemCarousel(Meal vegan, String type) {
-    return InkWell(
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailMealScreen(
-              food: vegan,
-              heroTag: '${vegan.mealID}$type',
-            ),
-          )),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(12) ),
-            child: Stack(
-              children: [
-                Hero(
-                  tag: '${vegan.mealID}$type',
-                  child: CachedNetworkImage(
-                    imageUrl: vegan.image ?? '',
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => defaultImageEmpty,
-                    errorWidget: (context, url, error) => defaultImageEmpty,
-                    height: 220,
-                    width: double.infinity,
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Card(
-                      color: Colors.transparent,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: (vegan.isVegan ?? false)
-                          ? Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: colorPrimary,
-                                // Background color
-                                shape: BoxShape.circle, // Makes it a circle
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.eco,
-                                  // Leaf icon
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            )
-                          : const SizedBox()),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 8,
-            left: 8,
-            right: 8,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Constrained name that won't overflow
-                  Expanded(
-                    child: Text(
-                      vegan.mealName ?? '',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  // Like icon and count
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.favorite, color: Colors.red, size: 16),
-                      SizedBox(width: 4),
-                      Text(
-                        '${vegan.totalLike}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSeacrh() {
     return Container(
       padding: EdgeInsets.all(4),
@@ -268,20 +149,24 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
 
   Widget _buildListMeal() {
     final list = mealList?.listMeals ?? [];
+    return  SizedBox(
+            height: 440,
+            child: AnimatedCardsCarousel(
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      // Let parent scroll handle it
-      padding: const EdgeInsets.all(8),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 3 / 2.5),
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        var item = list[index];
-        return _buildGridItem(item);
-      },
-    );
+              onFetchMore: fetchMore,
+              cardsList: List.generate(
+                list.length,
+                    (index) {
+                      var meal = mealList?.listMeals?[index];
+                      return CategoryCard(imageUrl: meal?.image ?? '', title: meal?.mealName ?? '');
+                    },
+              ),
+            ),
+          );
+  }
+
+  void fetchMore(){
+      print('Fetch More');
   }
 
   Widget _buildGridItem(Meal item) {

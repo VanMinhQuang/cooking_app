@@ -5,8 +5,6 @@ import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/data/constant/constant_app.dart';
 import 'package:cooking_project/data/model/meal_model.dart';
 import 'package:cooking_project/views/screens/meal/detail_meal/detail_meal_screen.dart';
-import 'package:cooking_project/views/widgets/carousel/meal_carousel/meal_carousel_cubit.dart';
-import 'package:cooking_project/views/widgets/carousel/meal_carousel/meal_carousel_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,10 +26,7 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MealCarouselCubit(),
-      child: _buildGridMeal(widget.mealList!, widget.type),
-    );
+    return  _buildGridMeal(widget.mealList!, widget.type);
   }
 
   Widget _buildGridMeal(List<Meal> mealList, String type) {
@@ -40,78 +35,69 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
     int startIndex = (_currentPage ~/ maxDots) * maxDots; // dot sẽ  sáng
     int visibleDots =
         (startIndex + maxDots > totalDots) ? totalDots - startIndex : maxDots;
-    return BlocListener<MealCarouselCubit, MealCarouselState>(
-        listener: (context, state) {
-      if (state is MealCarouselIndicatorChanged) {
-          _currentPage = state.index;
-           startIndex = (_currentPage ~/ maxDots) * maxDots; // dot sẽ  sáng
-           visibleDots =
-          (startIndex + maxDots > totalDots) ? totalDots - startIndex : maxDots;
-      }
-    }, child: BlocBuilder<MealCarouselCubit, MealCarouselState>(
-      builder: (context, state) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-                padding: EdgeInsets.only(bottom: 30),
-                width: double.infinity,
-                height: 220,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          enableInfiniteScroll: widget.mealList!.length > 1,
-                          enlargeCenterPage: true,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+            padding: EdgeInsets.only(bottom: 30),
+            width: double.infinity,
+            height: 220,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      enableInfiniteScroll: widget.mealList!.length > 1,
+                      enlargeCenterPage: true,
 
-                          autoPlayInterval: const Duration(seconds: 4),
-                          autoPlay: widget.mealList!.length == 1 ? false : true,
-                          initialPage: 0,
-                          onPageChanged: (index, reason) {
-                            context
-                                .read<MealCarouselCubit>()
-                                .updateIndicator(index);
-                          },
-                        ),
-                        carouselController: _carouselController,
-                        items: List.generate(
-                          mealList.length,
-                          (index) {
-                            return _buildItemCarousel(mealList[index], type);
-                          },
-                        ),
-                      ),
+                      autoPlayInterval: const Duration(seconds: 4),
+                      autoPlay: widget.mealList!.length == 1 ? false : true,
+                      initialPage: 0,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _currentPage = index;
+                          startIndex = (_currentPage ~/ maxDots) * maxDots; // dot sẽ  sáng
+                          visibleDots =
+                          (startIndex + maxDots > totalDots) ? totalDots - startIndex : maxDots;
+                        });
+                      },
                     ),
-                  ],
-                )),
-            widget.mealList!.length > 1
-                ? Positioned(
-                    bottom: 220 * 0.002,
-                    child:
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(visibleDots, (index) {
-                        bool isSelected =  _currentPage % maxDots == index;
-                        return   AnimatedContainer(
-                            width: isSelected ? 50 : 17,
-                            height: 10,
-                            margin: EdgeInsets.symmetric(horizontal: isSelected ? 6 : 3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40),
-                              color: isSelected ? colorPrimary : Colors.grey[400],
-                            ),
+                    carouselController: _carouselController,
+                    items: List.generate(
+                      mealList.length,
+                      (index) {
+                        return _buildItemCarousel(mealList[index], type);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            )),
+        widget.mealList!.length > 1
+            ? Positioned(
+                bottom: 220 * 0.002,
+                child:
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(visibleDots, (index) {
+                    bool isSelected =  _currentPage % maxDots == index;
+                    return   AnimatedContainer(
+                        width: isSelected ? 50 : 17,
+                        height: 10,
+                        margin: EdgeInsets.symmetric(horizontal: isSelected ? 6 : 3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: isSelected ? colorPrimary : Colors.grey[400],
+                        ),
 
-                            duration: const Duration(milliseconds: 300));
-                      },)
-                    )
-                  )
-                : const SizedBox()
-          ],
-        );
-      },
-    ));
+                        duration: const Duration(milliseconds: 300));
+                  },)
+                )
+              )
+            : const SizedBox()
+      ],
+    );
   }
 
   Widget _buildItemCarousel(Meal vegan, String type) {

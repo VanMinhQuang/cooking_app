@@ -115,7 +115,7 @@ class _DailyMealFormState extends State<DailyMealForm>
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomMealAppBar(),
+      appBar: CustomMealAppBar(isHaveSearchField: false,),
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,

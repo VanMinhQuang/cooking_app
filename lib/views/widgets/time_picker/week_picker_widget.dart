@@ -1,5 +1,6 @@
 import 'package:cooking_project/core/styles/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class WeekPicker extends StatefulWidget {
@@ -83,39 +84,36 @@ class _WeekPickerState extends State<WeekPicker> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-        child: Row(
+      child:  Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: const Icon(Icons.chevron_left),
+              icon:  Icon(Icons.chevron_left, size: 12.sp,),
               onPressed: _selectPreviousWeek,
             ),
             GestureDetector(
               onTap: _showWeekPickerDialog,
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_today, size: 16),
+                   Icon(Icons.calendar_today, size: 12.sp),
                   const SizedBox(width: 8),
                   Text(
                     weekRange,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 12.sp,
                     ),
                   ),
                 ],
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.chevron_right),
+              icon:  Icon(Icons.chevron_right,size: 12.sp),
               onPressed: _selectNextWeek,
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

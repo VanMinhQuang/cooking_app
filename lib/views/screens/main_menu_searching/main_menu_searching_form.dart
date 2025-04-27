@@ -14,6 +14,7 @@ import 'package:cooking_project/views/widgets/carousel/meal_carousel/meal_carous
 import 'package:cooking_project/views/widgets/stuffs/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/constant/constant_app.dart';
@@ -58,10 +59,10 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
           physics: AlwaysScrollableScrollPhysics(),
           scrollDirection: Axis.vertical,
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(10.sp),
             decoration: BoxDecoration(
               border: Border.all(
-                  width: 2,
+                  width: 2.sp,
                   color: Colors.white24,
                   style: BorderStyle.solid),
             ),
@@ -118,11 +119,11 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
         child: Row(
           children: [
             icon == null ?  const SizedBox() :Icon(icon, color: bgColor, size: 20),
-            SizedBox(width: 8),
+            SizedBox(width: 8.sp),
             Text(
               title,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
               ),
@@ -193,7 +194,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
                     child: CachedNetworkImage(
                       imageUrl: item.image ?? '',
                       width: double.infinity,
-                      height: 100,
+                      height: 100.sp,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => defaultImageEmpty,
                       errorWidget: (context, url, error) => defaultImageEmpty,
@@ -211,8 +212,8 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
                       ),
                       child: (item.isVegan ?? false)
                           ? Container(
-                              width: 25,
-                              height: 25,
+                              width: 25.sp,
+                              height: 25.sp,
                               decoration: BoxDecoration(
                                 color: colorPrimary,
                                 // Background color
@@ -223,7 +224,7 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
                                   Icons.eco,
                                   // Leaf icon
                                   color: Colors.white,
-                                  size: 15,
+                                  size: 15.sp,
                                 ),
                               ),
                             )
@@ -233,28 +234,28 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
             ),
             const SizedBox(height: 2),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              padding:  EdgeInsets.symmetric(horizontal: 8.sp, vertical: 3.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                       decoration: BoxDecoration(
                         color: Colors.greenAccent,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20.sp),
                       ),
                       child: Text(
                         item.mealName ?? '',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
+                            fontSize: 12.sp, fontWeight: FontWeight.bold),
                         overflow: TextOverflow.ellipsis,
 
                         maxLines: 1,
                       ),
                     ),
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   // Let icon take only needed space
                   _iconAndText(
                     Icons.favorite_rounded,
@@ -274,8 +275,8 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
   Widget _iconAndText(IconData icon, int? num, Color color, String type,
       {Color? textColor}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: colorWhite),
+      padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 4.sp),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.sp), color: colorWhite),
       child: Wrap(
         children: [
           Container(
@@ -284,18 +285,18 @@ class _MainMenuSearchingFormState extends State<MainMenuSearchingForm> {
               type == 'LIKE'
                   ? Formatter.formatTotalLike(num)
                   : Formatter.formatTime(num),
-              style: TextThemeStyle.textSecondaryFontSizeBold(12,
+              style: TextThemeStyle.textSecondaryFontSizeBold(12.sp,
                   color:
                       type == 'LIKE' ? colorPink : textColor ?? colorSecondary),
             ),
           ),
           Container(
             padding: EdgeInsets.only(
-              top: 2,
+              top: 2.sp,
             ),
             child: Icon(
               icon,
-              size: 15,
+              size: 15.sp,
               color: color,
             ),
           )

@@ -1,6 +1,7 @@
 import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/core/styles/text_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class TodayCaloriesIndicator extends StatelessWidget {
@@ -18,8 +19,8 @@ class TodayCaloriesIndicator extends StatelessWidget {
     final percent = (actualCalories / targetCalories).clamp(0.0, 1.0);
 
     return CircularPercentIndicator(
-      radius: 60,
-      lineWidth: 12.0,
+      radius: 60.sp,
+      lineWidth: 12.0.sp,
       animation: true,
       percent: percent,
       center: Column(

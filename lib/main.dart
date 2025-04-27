@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:cooking_project/core/helper/screen_app.dart';
 import 'package:cooking_project/routes.dart';
 import 'package:cooking_project/views/screens/home/home_screen.dart';
-import 'package:cooking_project/views/screens/login/login/login_screen.dart';
-import 'package:cooking_project/views/screens/login/otp/otp_screen.dart';
-import 'package:cooking_project/views/screens/setting/setting_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -73,19 +71,24 @@ class _AppState extends State<App> {
     LocalizationService().init(context);
     return LocalizationProvider(
         state: LocalizationProvider.of(context).state,
-        child: MaterialApp(
-          initialRoute: AppRoutes.home,
-          onGenerateRoute: AppRoutes.generateRoute,
-            home: HomeScreen(),
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              DefaultCupertinoLocalizations.delegate,
-              LocalizationService().delegate
-            ],
-          supportedLocales: LocalizationService().delegate.supportedLocales,
-          locale: LocalizationService().delegate.currentLocale,
-            debugShowCheckedModeBanner: false,));
+        child: ScreenUtilInit(
+          designSize: const Size(360, 690),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          child: MaterialApp(
+            initialRoute: AppRoutes.home,
+            onGenerateRoute: AppRoutes.generateRoute,
+              home: HomeScreen(),
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                DefaultCupertinoLocalizations.delegate,
+                LocalizationService().delegate
+              ],
+            supportedLocales: LocalizationService().delegate.supportedLocales,
+            locale: LocalizationService().delegate.currentLocale,
+              debugShowCheckedModeBanner: false,),
+        ));
   }
 }

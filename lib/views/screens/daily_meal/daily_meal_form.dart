@@ -12,6 +12,7 @@ import 'package:cooking_project/views/widgets/time_picker/date_picker_slide.dart
 import 'package:cooking_project/views/widgets/time_picker/week_picker_widget.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/flutter_percent_indicator.dart';
 
 class DailyMealForm extends StatefulWidget {
@@ -65,10 +66,10 @@ class _DailyMealFormState extends State<DailyMealForm>
                 // Use Container instead of Expanded
                 Expanded(
                   flex: 4,
-                  child: Container(
+                  child: SizedBox(
                     width:
                         MediaQuery.of(context).size.width * 0.4, // Adjust width
-                    height: 160,
+                    height: 160.sp,
                     child: TodayCaloriesIndicator(
                       targetCalories: 2000,
                       actualCalories: 1300,
@@ -77,7 +78,7 @@ class _DailyMealFormState extends State<DailyMealForm>
                 ),
                 Expanded(
                   flex: 5,
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +104,7 @@ class _DailyMealFormState extends State<DailyMealForm>
                 children: [
                   Text("Xin chao ...",
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
@@ -113,6 +114,7 @@ class _DailyMealFormState extends State<DailyMealForm>
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomMealAppBar(isHaveSearchField: false,),
@@ -126,7 +128,7 @@ class _DailyMealFormState extends State<DailyMealForm>
               initialDate: DateTime.now(),
             ),
             Container(
-              height: 300,
+              height: 300.sp,
               margin: const EdgeInsets.only(bottom: 10),
               child: Card(
                 shape: RoundedRectangleBorder(
@@ -216,13 +218,13 @@ class _DailyMealFormState extends State<DailyMealForm>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         LinearPercentIndicator(
-          width: 80,
+          width: 80.sp,
           animation: true,
           animationDuration: 1000,
           lineHeight: 10,
           leading: Container(
-            height: 45,
-            width: 45,
+            height: 45.sp,
+            width: 45.sp,
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -239,7 +241,7 @@ class _DailyMealFormState extends State<DailyMealForm>
                   color: Colors.black45)),
           percent: 0.2,
           progressColor: color,
-          barRadius: Radius.circular(10),
+          barRadius: Radius.circular(10.sp),
         ),
       ],
     );
@@ -261,8 +263,8 @@ class _DailyMealFormState extends State<DailyMealForm>
                   Row(
                     children: [
                       Container(
-                        child: const Icon(Icons.add_circle,
-                            size: 18, color: colorPrimary),
+                        child:  Icon(Icons.add_circle,
+                            size: 18.sp, color: colorPrimary),
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 20),
@@ -298,11 +300,11 @@ class _DailyMealFormState extends State<DailyMealForm>
                   Row(
                     children: [
                       Container(
-                        child: const Icon(Icons.add_circle,
-                            size: 18, color: colorPrimary),
+                        child:  Icon(Icons.add_circle,
+                            size: 18.sp, color: colorPrimary),
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 20),
+                        margin: EdgeInsets.only(left: 20.sp),
                         child: Text(
                           'Them',
                           maxLines: 2,

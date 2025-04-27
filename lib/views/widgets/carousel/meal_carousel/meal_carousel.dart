@@ -7,6 +7,7 @@ import 'package:cooking_project/data/model/meal_model.dart';
 import 'package:cooking_project/views/screens/meal/detail_meal/detail_meal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MealCarouselWidget extends StatefulWidget {
   final List<Meal>? mealList;
@@ -84,7 +85,7 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
                     bool isSelected =  _currentPage % maxDots == index;
                     return   AnimatedContainer(
                         width: isSelected ? 50 : 17,
-                        height: 10,
+                        height: 10.sp,
                         margin: EdgeInsets.symmetric(horizontal: isSelected ? 6 : 3),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40),
@@ -123,7 +124,7 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
                     fit: BoxFit.cover,
                     placeholder: (context, url) => defaultImageEmpty,
                     errorWidget: (context, url, error) => defaultImageEmpty,
-                    height: 220,
+                    height: 220.sp,
                     width: double.infinity,
                   ),
                 ),
@@ -138,8 +139,8 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
                       ),
                       child: (vegan.isVegan ?? false)
                           ? Container(
-                              width: 30,
-                              height: 30,
+                              width: 30.sp,
+                              height: 30.sp,
                               decoration: BoxDecoration(
                                 color: colorPrimary,
                                 // Background color
@@ -150,7 +151,7 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
                                   Icons.eco,
                                   // Leaf icon
                                   color: Colors.white,
-                                  size: 20,
+                                  size: 20.sp,
                                 ),
                               ),
                             )
@@ -179,7 +180,7 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 12.sp,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -190,13 +191,13 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.favorite, color: Colors.red, size: 16),
+                      Icon(Icons.favorite, color: Colors.red, size: 16.sp),
                       SizedBox(width: 4),
                       Text(
                         '${vegan.totalLike}',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ],

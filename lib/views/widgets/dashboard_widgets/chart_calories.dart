@@ -2,6 +2,7 @@ import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/core/styles/text_theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DashboardCaloriesChart extends StatelessWidget {
   final List<FlSpot> listCaloriesTarget;
@@ -31,7 +32,7 @@ class DashboardCaloriesChart extends StatelessWidget {
             borderData: FlBorderData(show: true,
             border: Border.all(
               color: colorPrimary800,
-              width: 2,
+              width: 2.sp,
             )),
             titlesData: FlTitlesData(
               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),

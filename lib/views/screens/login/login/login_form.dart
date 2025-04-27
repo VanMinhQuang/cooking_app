@@ -10,6 +10,7 @@ import 'package:cooking_project/views/widgets/mixin/base_mixin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -60,8 +61,8 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
               // Transparent Floating Back Button
               Positioned(
                 top: MediaQuery.of(context).padding.top +
-                    10, // Safe area handling
-                left: 10,
+                    10.sp, // Safe area handling
+                left: 10.sp,
                 child: Container(
                   margin: EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -97,15 +98,15 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
     return BlocBuilder<LoginCubit,LoginState>(builder: ( context,  state) {
       return Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20.sp),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Logo
-                SizedBox(width: 80, height: 80, child: logoImage),
+                SizedBox(width: 80.sp, height: 80.sp, child: logoImage),
 
-                SizedBox(height: 10),
+                SizedBox(height: 10.sp),
                 // Login Form
                 _loginBody()
               ],
@@ -121,11 +122,11 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
   Widget _loginBody() {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8.sp),
       ),
       elevation: 5,
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(20.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -137,7 +138,7 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
               ),
             ),
             Text("Sign into your account"),
-            SizedBox(height: 20),
+            SizedBox(height: 20.sp),
             // Email TextField
             TextField(
               controller: _phoneController,
@@ -153,11 +154,11 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.sp),
             // Login Button
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 50.sp,
               child: ElevatedButton(
                 onPressed: () {
                   var phoneNumber = _phoneController.text;
@@ -185,7 +186,7 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
                         color: colorWhite)),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.sp),
             Center(child: Text("Or login using social media")),
             Center(
               child: Row(
@@ -206,7 +207,7 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
                               .grey[200], // Background color for the icon
                         ),
                         child: Icon(Icons.facebook,
-                            size: 32, color: Colors.blue),
+                            size: 32.sp, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -232,7 +233,7 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -242,10 +243,10 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
   String _modifyPhoneNumber(String phoneNumber) {
     if (phoneNumber.startsWith('0')) {
       return phoneNumber =
-          '+84${phoneNumber.substring(1)}'; // Remove leading 0 and add country code
+          '+84${phoneNumber.substring(1)}';
     } else if (!phoneNumber.startsWith('+84')) {
       return phoneNumber =
-          '+84$phoneNumber'; // Ensure it starts with the country code
+          '+84$phoneNumber';
     }
     return phoneNumber;
   }

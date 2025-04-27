@@ -9,6 +9,7 @@ import 'package:cooking_project/views/widgets/mixin/base_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OtpForm extends StatefulWidget {
   String? verificationID;
@@ -75,7 +76,7 @@ class _OtpFormState extends State<OtpForm> with ProgressDialogMixin {
                         focusedBorderColor: colorPrimary800,
                         clearText: clearText,
                         showFieldAsBox: true,
-                        textStyle: TextThemeStyle.textSecondaryFontSizeBold(20,
+                        textStyle: TextThemeStyle.textSecondaryFontSizeBold(20.sp,
                             color: Colors.white),
                         onCodeChanged: (String value) {},
                         handleControllers: (controllers) {
@@ -88,7 +89,7 @@ class _OtpFormState extends State<OtpForm> with ProgressDialogMixin {
                               verificationId: widget.verificationID ?? '');
                         }, // end onSubmit
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       // Optional: Add spacing between OTP field and text
                       Center(
                         child: Padding(
@@ -96,7 +97,7 @@ class _OtpFormState extends State<OtpForm> with ProgressDialogMixin {
                           child: Text(
                             "Please enter your OTP below",
                             textAlign: TextAlign.center,
-                            style: TextThemeStyle.textSecondaryFontSizeBold(20,
+                            style: TextThemeStyle.textSecondaryFontSizeBold(20.sp,
                                 color: Colors.white),
                           ),
                         ),
@@ -104,11 +105,11 @@ class _OtpFormState extends State<OtpForm> with ProgressDialogMixin {
                       Center(
                         child: Text(
                           "Don't share this code with anyone.",
-                          style: TextThemeStyle.textSecondaryFontSizeBold(15,
+                          style: TextThemeStyle.textSecondaryFontSizeBold(15.sp,
                               color: Colors.white),
                         ),
                       ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       // Optional: Add space at the bottom
                     ],
                   ),

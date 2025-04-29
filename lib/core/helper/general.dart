@@ -1,4 +1,5 @@
-import 'package:cooking_project/data/model/user.dart';
+
+import 'package:cooking_project/domain/entities/user.dart';
 
 class General{
   General._();

@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:cooking_project/data/constant/constant_app.dart';
-import 'package:cooking_project/data/model/error_json.dart';
+import 'package:cooking_project/domain/entities/error_json.dart';
 
 import '../singleton/local_language.dart';
 
@@ -27,8 +27,8 @@ class Service{
     var langID =  LocalizationService().delegate.currentLocale.languageCode;
     var token = tokenAuthor ?? '';//await tokenPreferences.getPreferredToken();
     return {
-      'Content-type': '$headersContentType',
-      'LangID': '$langID',
+      'Content-type': headersContentType,
+      'LangID': langID,
       'Authorization': token,
     };
   }
@@ -44,7 +44,9 @@ class Service{
         statusCode == 206 ||
         statusCode == 207 ||
         statusCode == 208 ||
-        statusCode == 226) result = true;
+        statusCode == 226) {
+      result = true;
+    }
     return result;
   }
 
@@ -54,7 +56,9 @@ class Service{
         statusCode == 404 ||
         statusCode == 301 ||
         statusCode == 302 ||
-        statusCode == 303) result = true;
+        statusCode == 303) {
+      result = true;
+    }
     return result;
   }
 

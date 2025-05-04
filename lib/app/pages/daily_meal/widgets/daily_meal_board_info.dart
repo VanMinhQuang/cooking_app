@@ -1,5 +1,6 @@
 import 'package:cooking_project/app/pages/daily_meal/widgets/daily_meal_energy.dart';
 import 'package:cooking_project/app/widgets/dashboard_widgets/circle_percent_calories.dart';
+import 'package:cooking_project/core/helper/General.dart';
 import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/data/constant/constant_app.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class BoardInfo extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Xin chào ...",
+                  Text(General.user == null ? "Xin chào ..." : "Xin chào ${General.user?.displayName ?? ''}",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ],
               ),

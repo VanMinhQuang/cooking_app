@@ -30,7 +30,7 @@ class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
             if (state is LoginSuccess) {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (_) => const HomeScreen()),
+                MaterialPageRoute(builder: (_) => HomeScreen(key: UniqueKey(),)),
                     (route) => false,
               );
             } else if (state is LoginLoading) {

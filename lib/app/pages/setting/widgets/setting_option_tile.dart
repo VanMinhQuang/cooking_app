@@ -6,6 +6,7 @@ class SettingOptionTile extends StatelessWidget {
   final String title;
   final Color? color;
   final bool isLogout;
+  final Function()? onTapOption;
 
   const SettingOptionTile({
     super.key,
@@ -13,6 +14,7 @@ class SettingOptionTile extends StatelessWidget {
     required this.title,
     this.color,
     this.isLogout = false,
+     this.onTapOption
   });
 
   @override
@@ -23,9 +25,7 @@ class SettingOptionTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: InkWell(
-        onTap: () {
-          // Add functionality here
-        },
+        onTap: onTapOption,
         child: ListTile(
           leading: Icon(icon, color: Colors.black54),
           title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),

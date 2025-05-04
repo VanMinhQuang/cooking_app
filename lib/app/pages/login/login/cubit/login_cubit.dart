@@ -7,20 +7,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../domain/use_cases/auth_use_case/auth_use_case.dart';
 
 class LoginCubit extends Cubit<LoginState>{
-  final LoginWithPhoneUseCase loginWithPhone;
-  final LoginWithGoogleUseCase loginWithGoogle;
-  final LoginWithFacebookUseCase loginWithFacebook;
+  final LoginWithPhoneUseCase _loginWithPhone;
+  final LoginWithGoogleUseCase _loginWithGoogle;
+  final LoginWithFacebookUseCase _loginWithFacebook;
 
   LoginCubit({
-    required this.loginWithPhone,
-    required this.loginWithGoogle,
-    required this.loginWithFacebook,
-  }) : super(LoginEmpty());
+    required LoginWithPhoneUseCase loginWithPhone,
+    required LoginWithGoogleUseCase loginWithGoogle,
+    required LoginWithFacebookUseCase loginWithFacebook,
+  })  : _loginWithPhone = loginWithPhone,
+        _loginWithGoogle = loginWithGoogle,
+        _loginWithFacebook = loginWithFacebook,
+        super(LoginEmpty());
 
   void loginGoogle() async {
     emit(LoginLoading());
     try{
-      var result = await loginWithGoogle();
+      var result = await _loginWithGoogle();
       if(result ?? true){
         emit(LoginSuccess());
       }else{
@@ -34,7 +37,7 @@ class LoginCubit extends Cubit<LoginState>{
   void loginFacebook() async {
     emit(LoginLoading());
     try{
-      var result = await loginWithFacebook();
+      var result = await _loginWithFacebook();
       if(result ?? true){
         emit(LoginSuccess());
       }else{
@@ -48,7 +51,7 @@ class LoginCubit extends Cubit<LoginState>{
   void loginPhone({required String phoneNumber}) async {
     emit(LoginLoading());
     try{
-      var verficationId = await loginWithPhone(phone: phoneNumber);
+      var verficationId = await _loginWithPhone(phone: phoneNumber);
       emit(VerifyPhoneSuccess(verificationId: verficationId));
     }catch(e){
       emit(LoginFail(error: e.toString()));

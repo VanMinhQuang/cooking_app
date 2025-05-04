@@ -1,10 +1,17 @@
 import 'dart:io';
 
 import 'package:cooking_project/app/pages/home/view/home_screen.dart';
+import 'package:cooking_project/app/pages/splash/cubit/splash_cubit.dart';
+import 'package:cooking_project/app/pages/splash/cubit/splash_state.dart';
 import 'package:cooking_project/core/helper/screen_app.dart';
 import 'package:cooking_project/app/routes.dart';
 import 'package:cooking_project/core/singleton/injection_container.dart';
-import 'package:cooking_project/core/singleton/shared_preferences.dart';
+import 'package:cooking_project/core/helper/shared_preferences.dart';
+import 'package:cooking_project/data/repository/login_repository.dart';
+import 'package:cooking_project/domain/repositories/auth_repo/login_auth_repo.dart';
+import 'package:cooking_project/domain/use_cases/auth_use_case/auth_use_case.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,38 +23,31 @@ import '../core/bundle/default_asset.dart';
 import '../core/singleton/local_language.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../core/config/firebase_options.dart';
+import 'pages/splash/view/splash_screen.dart';
 
-Future<void> _initialize() async{
+Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform);
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
-
-Future<void> main() async{
+Future<void> main() async {
   HttpOverrides.global = MyHttpOverrides();
   await _initialize();
   await initDependencies();
   var delegate = await LocalizationDelegate.create(
-      fallbackLocale: 'vi',
-      supportedLocales: ['en_US', 'vi']);
+      fallbackLocale: 'vi', supportedLocales: ['en_US', 'vi']);
 
-  runApp(
-    DefaultAssetBundle(
-      bundle: TestAssetBundle(),
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return OrientationBuilder(
-            builder: (BuildContext context, Orientation orientation) {
-              return  LocalizedApp(delegate,App());
-            },
-          );
-        },
-      ),
-    )
-  );
+  runApp(DefaultAssetBundle(
+    bundle: TestAssetBundle(),
+    child: BlocProvider<SplashCubit>(
+        create: (context) => SplashCubit(getAuthUseCase: GetAuthStatusUseCase(loginRepository: sl<LoginRepository>()))..appStart(),
+        child: LocalizedApp(delegate, App())),
+  ));
 }
-
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -56,9 +56,7 @@ class MyHttpOverrides extends HttpOverrides {
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
   }
-
 }
-
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -68,7 +66,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-
   @override
   Widget build(BuildContext context) {
     ScreenApp.init(context);
@@ -83,17 +80,25 @@ class _AppState extends State<App> {
           child: MaterialApp(
             initialRoute: AppRoutes.home,
             onGenerateRoute: AppRoutes.generateRoute,
-              home: HomeScreen(),
-              localizationsDelegates: [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                DefaultCupertinoLocalizations.delegate,
-                LocalizationService().delegate
-              ],
+            home: BlocBuilder<SplashCubit, SplashState>(
+              builder: (BuildContext context, state) {
+                if (state is SplashDone) {
+                  return HomeScreen();
+                }
+                return SplashScreen();
+              },
+            ),
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+              LocalizationService().delegate
+            ],
             supportedLocales: LocalizationService().delegate.supportedLocales,
             locale: LocalizationService().delegate.currentLocale,
-              debugShowCheckedModeBanner: false,),
+            debugShowCheckedModeBanner: false,
+          ),
         ));
   }
 }

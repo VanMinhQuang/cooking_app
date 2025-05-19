@@ -1,6 +1,7 @@
+import 'package:cooking_project/core/styles/color.dart';
 import 'package:flutter/material.dart';
 
-mixin ProgressDialogMixin<T extends StatefulWidget> on State<T> {
+mixin BaseMixin<T extends StatefulWidget> on State<T> {
   bool _isDialogShowing = false;
 
   void showProgressDialog({String? message}) {
@@ -29,5 +30,17 @@ mixin ProgressDialogMixin<T extends StatefulWidget> on State<T> {
       _isDialogShowing = false;
       Navigator.of(context, rootNavigator: true).pop();
     }
+  }
+
+  Widget background(){
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [colorPrimary800, colorPrimaryAccent],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+    );
   }
 }

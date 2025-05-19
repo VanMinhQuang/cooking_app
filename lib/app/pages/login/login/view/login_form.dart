@@ -17,7 +17,7 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> with ProgressDialogMixin {
+class _LoginFormState extends State<LoginForm> with BaseMixin {
   final TextEditingController _phoneController = TextEditingController();
   bool _isPhoneEmpty = false;
 

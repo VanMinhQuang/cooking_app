@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cooking_project/app/pages/meal/detail_meal/view/detail_meal_screen.dart';
+import 'package:cooking_project/app/routes.dart';
 import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/data/constant/constant_app.dart';
 import 'package:cooking_project/domain/entities/meal_model.dart';
@@ -104,14 +105,13 @@ class _MealCarouselWidgetState extends State<MealCarouselWidget> {
 
   Widget _buildItemCarousel(Meal vegan, String type) {
     return InkWell(
-      onTap: () => Navigator.push(
+      onTap: () => Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => DetailMealScreen(
-              food: vegan,
-              heroTag: '${vegan.mealID}$type',
-            ),
-          )),
+          AppRoutes.detail,
+      arguments: {
+            'food': vegan,
+            'heroTag': '${vegan.mealID}$type}'
+      }),
       child: Stack(
         children: [
           ClipRRect(

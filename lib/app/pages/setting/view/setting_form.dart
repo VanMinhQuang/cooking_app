@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+
 import 'package:cooking_project/app/pages/home/view/home_screen.dart';
 import 'package:cooking_project/app/pages/setting/cubit/setting_cubit.dart';
 import 'package:cooking_project/app/pages/setting/cubit/setting_state.dart';
@@ -17,7 +17,7 @@ class SettingForm extends StatefulWidget {
   State<SettingForm> createState() => _SettingFormState();
 }
 
-class _SettingFormState extends State<SettingForm> with ProgressDialogMixin {
+class _SettingFormState extends State<SettingForm> with BaseMixin {
   LocalUser? _user;
 
   @override
@@ -92,16 +92,14 @@ class _SettingFormState extends State<SettingForm> with ProgressDialogMixin {
                           color: Color(0xFFFFCDD2),
                           // colorRed.shade100
                           isLogout: true,
-                          onTapOption: () => CustomAlertDialog.showCustomDialog(
-                              context: context,
-                              type: DialogType.warning,
-                              title: 'Đăng xuất',
-                              content: 'Are u sure fen',
-                              btnOkText: 'Sure fen',
-                              btnCancelText: '',
-                              onYesCb: () =>
-                                  context.read<SettingCubit>().logOut(),
-                              onCancelCb: null),
+                          onTapOption: () => CustomAlertDialog.showBottomSheetPositiveDialog(
+                            context: context,
+                            title: 'Đăng xuất',
+                            content: 'Are u sure fen',
+                            btnCancelText: 'Hủy',
+                            btnOkText: 'Đồng ý',
+                            onYesCb: () =>   context.read<SettingCubit>().logOut()
+                          ),
                         )
                 ],
               ),

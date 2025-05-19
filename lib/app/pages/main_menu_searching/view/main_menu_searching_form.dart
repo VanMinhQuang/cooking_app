@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +6,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../domain/entities/meal_model.dart';
 import '../../../widgets/bar/main_app_bar.dart';
-import '../../../widgets/carousel/meal_carousel/meal_carousel.dart';
 import '../../../widgets/stuffs/components.dart';
 import '../cubit/main_menu_searching_cubit.dart';
 import '../cubit/main_menu_searching_state.dart';

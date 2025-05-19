@@ -1,5 +1,6 @@
-
 import 'package:cooking_project/app/pages/meal/detail_meal/widgets/detail_meal_info_item.dart';
+import 'package:cooking_project/app/pages/meal/meal_step/view/meal_step_screen.dart';
+import 'package:cooking_project/app/routes.dart';
 import 'package:cooking_project/app/widgets/stuffs/text.dart';
 import 'package:cooking_project/core/styles/color.dart';
 import 'package:cooking_project/core/styles/text_theme.dart';
@@ -85,7 +86,7 @@ class MealOverviewContent extends StatelessWidget {
 
           // Start cooking button
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.step),
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity, 50.sp),
               backgroundColor: colorPrimary,
@@ -95,7 +96,8 @@ class MealOverviewContent extends StatelessWidget {
             ),
             child: Text(
               'Start Cooking',
-              style: TextThemeStyle.textSecondaryFontSizeBold(18, color: colorWhite),
+              style: TextThemeStyle.textSecondaryFontSizeBold(18,
+                  color: colorWhite),
             ),
           ),
         ],

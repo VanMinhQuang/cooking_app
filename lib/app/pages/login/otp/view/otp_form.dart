@@ -16,7 +16,7 @@ class OtpForm extends StatefulWidget {
   State<OtpForm> createState() => _OtpFormState();
 }
 
-class _OtpFormState extends State<OtpForm> with ProgressDialogMixin {
+class _OtpFormState extends State<OtpForm> with BaseMixin {
   late List<TextEditingController?> controls;
   bool clearText = false;
 

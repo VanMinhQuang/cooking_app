@@ -1,5 +1,5 @@
+import 'package:cooking_project/app/pages/main_menu_searching/widgets/meal_carousel/animated_meal_carousel.dart';
 import 'package:flutter/material.dart';
-import '../../../widgets/carousel/meal_carousel/animated_meal_carousel.dart';
 import '../../../../domain/entities/meal_model.dart';
 import '../../../widgets/stuffs/components.dart';
 import 'meal_card.dart';

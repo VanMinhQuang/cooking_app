@@ -1,3 +1,11 @@
+// This plugins block should be at the very top
+plugins {
+    id 'com.android.application' // Already declarative via settings.gradle, but good to list here
+    id 'com.google.gms.google-services'
+    id 'kotlin-android'
+    id 'dev.flutter.flutter-gradle-plugin' // Added for Flutter
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -21,16 +29,16 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
+// apply plugin: 'com.android.application' // Removed, moved to plugins block
 // START: FlutterFire Configuration
-apply plugin: 'com.google.gms.google-services'
+// apply plugin: 'com.google.gms.google-services' // Removed, moved to plugins block
 // END: FlutterFire Configuration
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+// apply plugin: 'kotlin-android' // Removed, moved to plugins block
+// apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle" // Removed for declarative Flutter plugin
 
 android {
     namespace "vn.test.cooking"  // Required for AGP 8.0+
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     kotlinOptions {
         jvmTarget = '1.8'
@@ -48,7 +56,7 @@ android {
     defaultConfig {
         applicationId "vn.test.cooking"
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         //TODO: 2024-04-15:[Upgrade build] khi upgrade build android can tang version len de chay duoc upgrade auto
         versionCode 1
         versionName '0.0.0'

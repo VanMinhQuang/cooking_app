@@ -19,11 +19,11 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../core/bundle/default_asset.dart';
-import '../core/singleton/local_language.dart';
+import 'core/bundle/default_asset.dart';
+import 'core/singleton/local_language.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../core/config/firebase_options.dart';
-import 'pages/splash/view/splash_screen.dart';
+import 'core/config/firebase_options.dart';
+import 'app/pages/splash/view/splash_screen.dart';
 
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();

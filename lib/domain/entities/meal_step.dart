@@ -17,13 +17,13 @@ class MealStep {
       required this.isDone,
       required this.listRecipe});
 
-  List<MealStep> mockMealSteps = [
+  static List<MealStep> mockMealSteps = [
     MealStep(
       stepIndex: 0,
       descr: "Prepare the ingredients",
       method: "",
       time: 60,
-      videoUrl: "",
+      videoUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
       isDone: false,
       listRecipe: [
         RecipeGram(

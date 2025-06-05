@@ -19,17 +19,18 @@ class _DetailMealFormState extends State<DetailMealForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        //physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            // 1. Image and overlay section with a fixed height
+
             MealHeaderImage(
               imageUrl: widget.food!.image!,
               heroTag: widget.heroTag,
             ),
 
-            // 2. Detail Card positioned below the fixed image height
+
             Transform.translate(
-              offset: Offset(0, -50.sp), // Move the card up to overlap
+              offset: Offset(0, -50.sp),
               child: Padding(
                 padding: EdgeInsets.all(20.sp),
                 child: MealDetailCard(food: widget.food!),
